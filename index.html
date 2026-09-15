@@ -1075,6 +1075,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
         <div class="evolutionTitle"><span>✨ キャラクター進化</span><span class="powerBadge" id="selectedPower">⚡ 戦力 0</span></div>
         <div class="evolutionInfo" id="evolutionInfo">通常属性は★1〜★4を同じキャラ3体で進化。👑エンペラーは★1〜★10まで進化できます。</div><div class="evolutionInfo" style="margin-top:10px">👑 <b>唯一のエンペラー属性</b>：このキャラクターだけが★1〜★10まで進化可能。各段階は同じキャラクターを3体で1進化、30体で10進化。</div>
         <button class="evolutionBtn" id="evolutionBtn" type="button" disabled>✨ 進化する</button>
+        <button class="evolutionBtn" id="bulkEvolutionBtn" type="button" onclick="bulkEvolveAll()">🚀 一括進化</button>
         <div class="evolutionInfo" style="margin-top:10px">🌟 <b>★6生成</b>：全種類の★5をそれぞれ2体ずつ（合計18体）使うと、ランダム属性の★6を1体作れます。</div>
 
         <button class="evolutionBtn" id="star6CreateBtn" type="button" onclick="createRandomStar6()" disabled>🌟 全★5を2体ずつ使ってランダム★6を作る</button>
@@ -1291,6 +1292,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
     <div class="ticketText">🎟️ ガチャチケット：<span id="gachaTickets">0</span>枚</div>
     <button class="action" onclick="drawCharacterGacha()">🎲 ガチャを1回引く</button>
     <button class="action" onclick="drawCharacterGachaMulti(50)">🎉 50連ガチャ（チケット50枚）</button>
+    <button class="action" onclick="drawCharacterGachaMulti(100)">💥 100連ガチャ（チケット100枚）</button>
     <div class="gachaUltraRareNote">💎 激レア5体はガチャ限定！ 合計排出率 1%</div>
     <div id="gachaResult" class="msg">パニックすなどでチケットを集めよう！</div>
   </div>
@@ -1416,7 +1418,12 @@ function spinRoulette(cost,rewards,wheelId,rewardId,buttonId){
   setTimeout(()=>{
     clearInterval(timer);
     if(prefix){['a','b','c'].forEach(x=>{const r=document.getElementById(prefix+x);if(r)r.classList.remove('spinning');});}
-    const idx=Math.floor(Math.random()*rewards.length), reward=rewards[idx];
+    const roll=Math.random();
+    let idx;
+    if(cost===100){ idx=roll<0.75?0:roll<0.93?1:roll<0.98?2:roll<0.995?3:4; }
+    else if(cost===1000){ idx=roll<0.80?0:roll<0.94?1:roll<0.98?2:roll<0.995?3:4; }
+    else { idx=roll<0.75?0:roll<0.93?1:roll<0.98?2:roll<0.995?3:4; }
+    const reward=rewards[idx];
     const patterns=[['😵','😵','😵'],['🍒','🍒','🔔'],['🔔','🔔','🔔'],['⭐','⭐','⭐'],['7️⃣','7️⃣','7️⃣']];
     if(prefix){const pat=patterns[Math.min(idx,patterns.length-1)];['a','b','c'].forEach((x,i)=>{const r=document.getElementById(prefix+x);if(r)r.textContent=pat[i];});}
     gachaTickets+=reward; updateSlotTickets();
@@ -2524,6 +2531,7 @@ let partyCharacters=[];
 let gachaTickets=50;
 const CHARACTER_SAVE_KEY="panikus_character_progress_v1";
 const GACHA_TICKET_RESET_KEY="panicus_gacha_ticket_reset_50pull_v4";
+const GACHA_TICKET_RESET_V5_KEY="panicus_gacha_ticket_reset_v5_50";
 const CHARACTER_PROGRESS_RESET_KEY="panicus_character_progress_reset_v2";
 // 各段階の同じキャラクターを3体合成すると1段階進化
 const EVOLVE_REQUIREMENTS={1:3,2:3,3:3,4:3,5:3,6:3,7:3,8:3,9:3};
@@ -2767,7 +2775,7 @@ function drawCharacterGachaMulti(count){
   count=Number(count)||50;
   const result=document.getElementById("gachaResult");
   if(gachaTickets<count){
-    if(result)result.textContent=`🎟️ 50連にはチケットが${count}枚必要です！（現在${gachaTickets}枚）`;
+    if(result)result.textContent=`🎟️ ${count}連ガチャにはチケットが${count}枚必要です！（現在${gachaTickets}枚）`;
     return;
   }
   const results=[];
@@ -2798,7 +2806,7 @@ function drawCharacterGachaMulti(count){
   const counts=results.reduce((a,c)=>(a[c.rarity]=(a[c.rarity]||0)+1,a),{});
   const ultraResults=results.filter(c=>c.rarity===7);
   const ultraText=ultraResults.length?`<br>💎 激レア：${ultraResults.map(c=>c.name).join("、")}`:"";
-  if(result)result.innerHTML=`🎉 50連完了！ <b>50体GET！</b><br>⭐1：${counts[1]||0}体　⭐2：${counts[2]||0}体　💎激レア：${counts[7]||0}体${ultraText}<br>🎟️ 残りチケット：${gachaTickets}枚`;
+  if(result)result.innerHTML=`🎉 ${count}連ガチャ完了！ <b>${count}体GET！</b><br>⭐1：${counts[1]||0}体　⭐2：${counts[2]||0}体　💎激レア：${counts[7]||0}体${ultraText}<br>🎟️ 残りチケット：${gachaTickets}枚`;
 }
 
 function getCharacterPower(c){if(!c)return 0;const maxSkill=Math.max(0,...(c.skills||[]).map(sk=>Number(sk.damage)||0));return Math.round((Number(c.maxHP)||0)*0.9+(Number(c.attack)||0)*3+maxSkill*2+(c.rarity||1)*100);}
@@ -2807,6 +2815,16 @@ function getNextEvolution(c){if(!c||c.rarity>=10)return null;const family=getCha
 function getCharacterCopies(id){return Math.max(0,Number(characterCopies[id]||0));}
 function saveCharacterProgress(){try{localStorage.setItem(CHARACTER_SAVE_KEY,JSON.stringify({v:1,ownedCharacters,characterCopies,gachaTickets,partyCharacters}));}catch(e){}}
 function loadCharacterProgress(){try{
+  // 今回の版ではガチャチケットだけ50枚にリセット（キャラクター進行度は維持）
+  if(localStorage.getItem(GACHA_TICKET_RESET_V5_KEY)!=="done"){
+    gachaTickets=50;
+    localStorage.setItem(GACHA_TICKET_RESET_V5_KEY,"done");
+    const current=localStorage.getItem(CHARACTER_SAVE_KEY);
+    if(current){
+      try{const d=JSON.parse(current); d.gachaTickets=50; localStorage.setItem(CHARACTER_SAVE_KEY,JSON.stringify(d));}
+      catch(e){}
+    }
+  }
   // キャラクター進行度とガチャチケットを今回の版で初期化（他のゲーム進行は維持）
   if(localStorage.getItem(CHARACTER_PROGRESS_RESET_KEY)!=="done"){
     ownedCharacters=["fire1","ice1","thunder1"];
@@ -2920,6 +2938,45 @@ function renderDex(typeFilter="すべて"){
 }
 function showDexDetail(c,owned){const detail=document.getElementById("dexDetail");if(!detail||!c)return;detail.dataset.selected=c.id;const stars=getRarityStars(c.rarity),art=characterArt(c,owned),power=getCharacterPower(c),copies=getCharacterCopies(c.id),next=getNextEvolution(c);if(!owned){detail.innerHTML=`<div class="dexHero"><div class="dexHeroCreature">${art}</div><div><h2>${dexCharacterName(c)}</h2><div class="dexType">${c.type}　${stars}</div><div class="powerBadge">⚡ 戦力 ${power}</div></div></div><div class="dexDescription">まだこのキャラクターを発見していません。キャラクターガチャで入手すると詳細が解放されます。</div><div class="dexStats"><div class="dexStat">レア度<b>${stars}</b></div><div class="dexStat">HP<b>？？？</b></div><div class="dexStat">攻撃<b>？？？</b></div></div>`;updateEvolutionUI(c);return;}detail.innerHTML=`<div><div class="dexHero"><div class="dexHeroCreature">${art}</div><div><h2>${dexCharacterName(c)}</h2><div class="dexType">${c.type}　${stars}</div><div class="powerBadge">⚡ 戦力 ${power}</div></div></div><div class="dexDescription">${dexCharacterName(c)}の${c.rarity}段階目。所持数 ${copies}体。${next?`同じキャラクターを★${c.rarity}で3体集めると、3体を合成して${dexCharacterName(next)}へ進化できます。`:c.rarity>=10?"👑 エンペラーは★10が最終レアです。":"★5は最終進化です。"}</div><div class="dexStats"><div class="dexStat">レア度<b>${stars}</b></div><div class="dexStat">HP<b>${c.maxHP}</b></div><div class="dexStat">攻撃<b>${c.attack}</b></div></div><div class="dexSkills">${c.skills.map(sk=>`<div class="dexSkill"><div class="dexSkillTop"><span>${sk.icon} ${sk.name}</span><span>${sk.damage}ダメージ</span></div><div class="dexSkillInfo">コスト ${sk.cost} / クールダウン ${sk.cooldown}</div></div>`).join("")}</div></div>`;updateEvolutionUI(c);}
 function updateEvolutionUI(c){const btn=document.getElementById("evolutionBtn"),info=document.getElementById("evolutionInfo"),powerEl=document.getElementById("selectedPower"),star6Btn=document.getElementById("star6CreateBtn"),emperorBtn=document.getElementById("emperorCreateBtn");if(star6Btn)star6Btn.disabled=!canCreateStar6();if(emperorBtn)emperorBtn.disabled=!canCreateEmperor();if(!c)return;const copies=getCharacterCopies(c.id),next=getNextEvolution(c),need=EVOLVE_REQUIREMENTS[c.rarity]||0;if(powerEl)powerEl.textContent=`⚡ 戦力 ${getCharacterPower(c)}`;if(!next){if(info)info.textContent=c.rarity>=10?"👑 エンペラーは★10が最終レアです。これ以上進化できません。":"★5は最終進化です。これ以上進化できません。";if(btn){btn.disabled=true;btn.textContent="✨ 最終進化";}return;}if(info)info.textContent=`${dexCharacterName(c)}（★${c.rarity}）→ ${dexCharacterName(next)}（★${next.rarity}）｜通常：3体→1進化 ／ まとめ：30体→10進化｜現在 ${copies}体`;if(btn){btn.disabled=copies<need||!ownedCharacters.includes(c.id);btn.textContent=copies>=need?`✨ 3体合成して${dexCharacterName(next)}へ1進化`:`✨ あと ${Math.max(0,need-copies)}体必要`;btn.onclick=()=>evolveCharacter(c.id,1,1);}}
+function bulkEvolveAll(){
+  let totalEvolutions=0;
+  let totalCreated=0;
+  let changed=true;
+  while(changed){
+    changed=false;
+    for(const c of [...characterMaster]){
+      if(!c || c.rarity>=10) continue;
+      const next=getNextEvolution(c);
+      if(!next) continue;
+      const copies=getCharacterCopies(c.id);
+      const amount=Math.floor(copies/3);
+      if(amount<=0) continue;
+      characterCopies[c.id]=copies-(amount*3);
+      characterCopies[next.id]=(characterCopies[next.id]||0)+amount;
+      if(!ownedCharacters.includes(next.id)) ownedCharacters.push(next.id);
+      totalEvolutions+=amount;
+      totalCreated+=amount;
+      changed=true;
+    }
+  }
+  if(totalEvolutions<=0){
+    const result=document.getElementById("gachaResult");
+    if(result)result.textContent="🔒 3体以上そろっていて進化できるキャラクターがありません。";
+    return;
+  }
+  sanitizeDungeonParty();
+  titleStats.discovered=ownedCharacters.length;
+  checkTitles();
+  saveCharacterProgress();
+  updateGachaUI();
+  renderCharacterCollection();
+  renderDex();
+  renderPartyUI();
+  renderDungeonParty();
+  const result=document.getElementById("gachaResult");
+  if(result)result.innerHTML=`🚀 <b>一括進化完了！</b><br>合計 ${totalEvolutions}回進化して、${totalCreated}体の進化後キャラクターを作成しました！`;
+}
+
 function evolveCharacter(id,required=null,output=null){const source=characterMaster.find(x=>x.id===id);required=Number.isFinite(required)?required:(EVOLVE_REQUIREMENTS[source?.rarity]||3);output=Number.isFinite(output)?output:(EVOLVE_OUTPUTS[source?.rarity]||1);const c=source;if(!c||c.rarity>=10)return;if(required!==30)required=3;output=required===30?10:1;const next=getNextEvolution(c);if(!next||getCharacterCopies(id)<required)return;characterCopies[id]-=required;characterCopies[next.id]=(characterCopies[next.id]||0)+output;if(!ownedCharacters.includes(next.id))ownedCharacters.push(next.id);sanitizeDungeonParty();titleStats.discovered=ownedCharacters.length;saveCharacterProgress();updateGachaUI();renderCharacterCollection();renderDex();renderPartyUI();renderDungeonParty();const result=document.getElementById("gachaResult");if(result)result.textContent=`✨ ${dexCharacterName(c)}を${required}体合成して${dexCharacterName(next)} ★${next.rarity}を${output}体GET！`;}
 function togglePartyCharacter(id){if(!ownedCharacters.includes(id))return;const i=partyCharacters.indexOf(id);if(i>=0)partyCharacters.splice(i,1);else if(partyCharacters.length<3)partyCharacters.push(id);else{partyCharacters.shift();partyCharacters.push(id);}saveCharacterProgress();renderPartyUI();}
 function removePartyCharacter(id){const i=partyCharacters.indexOf(id);if(i>=0){partyCharacters.splice(i,1);saveCharacterProgress();renderPartyUI();}}

@@ -907,6 +907,102 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 @media(max-width:560px){#homeScreen{padding:34px 16px 50px}.gameGrid{grid-template-columns:1fr!important}.gameCard{min-height:220px!important}.app{padding:20px 12px 50px!important}.gachaBox,.dexBox,.dungeonBox,.bar{padding:16px!important;border-radius:18px!important}}
 </style>
 
+
+<style id="mobile-optimization">
+/* PANICUS mobile layout optimization */
+@media (max-width: 600px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-size: 14px !important;
+  }
+
+  .app, .screen, #homeScreen {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .app {
+    padding: 10px !important;
+    margin: 0 !important;
+    min-height: 100dvh !important;
+  }
+
+  /* Make common containers/cards compact */
+  .container, .panel, .card, .game-panel, .section, .menu-section {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  button {
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+
+  input, select {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  h1 { font-size: 24px !important; margin: 8px 0 !important; }
+  h2 { font-size: 20px !important; margin: 8px 0 !important; }
+  h3 { font-size: 17px !important; margin: 6px 0 !important; }
+
+  /* Home/game cards: reduce vertical gaps */
+  #homeScreen > *, .game-list > *, .games-grid > * {
+    margin-bottom: 8px !important;
+  }
+
+  /* Prevent large desktop min-widths from creating tall/wide mobile layouts */
+  [style*="min-width"] {
+    min-width: 0 !important;
+  }
+
+  /* Canvases and game boards fit the viewport */
+  canvas {
+    max-width: 100% !important;
+    height: auto;
+  }
+
+  /* Dense grids */
+  .grid, .board, .character-grid, .gacha-grid, .dungeon-grid,
+  .items-grid, .shop-grid {
+    max-width: 100% !important;
+    gap: 5px !important;
+  }
+
+  /* Market screen */
+  #marketGame {
+    padding: 8px !important;
+  }
+  #marketGame .market-grid {
+    gap: 6px !important;
+  }
+  #marketGame .market-card {
+    padding: 8px !important;
+  }
+  #marketGame .market-chart {
+    height: 150px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  body { font-size: 13px !important; }
+  .app { padding: 7px !important; }
+  button { min-height: 36px !important; padding: 6px 9px !important; font-size: 13px !important; }
+  h1 { font-size: 21px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 16px !important; }
+}
+</style>
+
 </head>
   <body>
 

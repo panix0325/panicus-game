@@ -154,6 +154,8 @@
         z-index:3;}
       .item:disabled{opacity:.35;cursor:not-allowed}
       .item small{display:block;color:#aaa;font-weight:400}
+      .itemTax{margin-top:8px;padding:8px 10px;border:1px solid rgba(255,216,77,.35);border-radius:9px;background:rgba(255,190,50,.07);font-size:11px;color:#d9c98a;line-height:1.45}.itemTax b{color:#ffd84d}.itemTaxAlert{animation:itemTaxPulse .6s ease-in-out 2}@keyframes itemTaxPulse{50%{box-shadow:0 0 18px rgba(255,90,70,.45);border-color:#ff6b5e}}
+
       .action{display:block;margin:10px auto 0;padding:12px 24px;border:1px solid #00eaff;border-radius:10px;background:#071923;color:#eaffff;font-weight:700;cursor:pointer;box-shadow:0 0 14px rgba(0,220,255,.2)}
       .msg{text-align:center;min-height:28px;font-weight:700}.bad{color:#ff6972}.good{color:#75df9a}
       .warning{text-align:center;min-height:30px;color:#ff4d5a;font-weight:900;font-size:20px}
@@ -1003,6 +1005,24 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 }
 </style>
 
+
+<style id="market-holding-tax-system">
+.marketTaxBox{margin:10px 0;padding:11px 13px;border-radius:12px;background:linear-gradient(135deg,#fff8e6,#ffe7a8);border:1px solid #d9b64d;color:#5b4500;box-shadow:0 0 16px rgba(255,208,80,.12)}
+.marketTaxTitle{font-weight:900;font-size:16px}.marketTaxMain{margin-top:4px;font-size:14px}.marketTaxMain b{font-size:18px}.marketTaxDetail{margin-top:4px;font-size:11px;line-height:1.45;color:#745c16}.marketTaxAlert{animation:marketTaxFlash .8s ease}.marketTaxAlert .marketTaxMain b{color:#b3261e}
+@keyframes marketTaxFlash{0%{transform:scale(1);box-shadow:0 0 0 rgba(255,80,60,0)}45%{transform:scale(1.02);box-shadow:0 0 24px rgba(255,80,60,.45)}100%{transform:scale(1);box-shadow:0 0 0 rgba(255,80,60,0)}}
+</style>
+<style id="market-tax-system">
+.market-tax-box{
+  margin:10px 0;padding:10px 12px;border-radius:12px;
+  background:linear-gradient(135deg,#fff7df,#ffe9a8);
+  border:1px solid #e6c45a;color:#5b4500;
+}
+.market-tax-title{font-weight:800;font-size:16px}
+.market-tax-note{font-size:12px;margin-top:4px;line-height:1.45}
+.market-tax-status{font-weight:700;margin-top:5px}
+.market-tax-warning{color:#b3261e}
+</style>
+
 </head>
   <body>
 
@@ -1153,7 +1173,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
     <h1>📈 PANIC MARKET</h1><div class="sub">10秒ごとに価格が自動変動！ニュースを読んで売買しよう。</div>
     <div class="marketBox" id="marketMainBox">
       <div class="marketTop"><div class="marketStat"><span>💰 所持金</span><b id="marketMoney">¥10,000</b></div><div class="marketStat"><span>📊 総資産</span><b id="marketAssets">¥10,000</b></div><div class="marketStat"><span>⏱️ 次の変動</span><b class="marketCountdown" id="marketCountdown">10秒</b></div></div>
-      <div class="marketNews" id="marketNews">📰 市場オープン！</div><div class="marketTable" id="marketTable"></div><div class="marketHoldings" id="marketHoldings"></div>
+      <div class="marketNews" id="marketNews">📰 市場オープン！</div><div class="marketTaxBox" id="marketTaxBox"><div class="marketTaxTitle">🏛️ 商品保有税</div><div class="marketTaxMain">次の税金まで <b id="marketTaxCountdown">60秒</b></div><div class="marketTaxDetail" id="marketTaxDetail">商品を多く持つほど、60秒ごとの税金が増えます。</div></div><div class="marketTable" id="marketTable"></div><div class="marketHoldings" id="marketHoldings"></div>
       <div class="marketChartWrap"><canvas id="marketChart" class="marketChart"></canvas><div style="font-size:11px;color:#91a8bc;text-align:center">直近20回の価格推移</div></div>
     </div>
     <div class="marketBox"><b>💡 ルール</b><p style="font-size:12px;color:#a9bfd2;line-height:1.55">食料・エネルギー・土地・レアアイテム・クリスタルを売買できます。価格は10秒ごとに変動し、ニュースやPANIC発生で大きく動きます。</p></div>
@@ -1382,6 +1402,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
             ><small>1ルール削除</small>
           </button>
         </div>
+        <div class="itemTax" id="itemTaxPanel">🏛️ <b>アイテム税</b>：所持数が多いほど税金が増えます。次回徴収まで <b id="itemTaxCountdown">60秒</b><br>高性能アイテムほど税率が高く、税金はアイテムそのものから徴収されます。</div>
       </div>
 
       <div id="board"></div>
@@ -1570,12 +1591,14 @@ function hideAllGames(){
 }
 
 function showHome(){
+  if (window.stopMarketTax) window.stopMarketTax();
   // ホームに戻った瞬間のHPを保存
   savedPlayerHP = playerHP;
 
   // 敵の攻撃タイマーを止める
   clearInterval(enemyAttackTimer);
   marketStopTimer();
+  if(typeof itemTaxTimer!=="undefined" && itemTaxTimer){clearInterval(itemTaxTimer);itemTaxTimer=null;}
 
   hideAllGames();
   document.getElementById("homeScreen").style.display="block";
@@ -1597,6 +1620,7 @@ if(game==="puzzle"){
   updateUI();
   updateItems();
   renderRules();
+  startItemTaxTimer();
 
   // 敵の攻撃を再開
   startEnemyAttackTimer();
@@ -1613,7 +1637,8 @@ if(game==="puzzle"){
     updateSlotCounts();
   }
 
-  if(game==="market"){ document.getElementById("marketGame").style.display="block"; openMarket(); }
+  if(game==="market"){
+      if (window.startMarketTax) window.startMarketTax(); document.getElementById("marketGame").style.display="block"; openMarket(); }
   if(game==="titles"){
     document.getElementById("titlesGame").style.display="block";
     renderTitles();
@@ -1678,6 +1703,10 @@ let playerDefeated=false;
                                                                                                                       };
 
                                                                                                                       const itemState={stop:0,bomb:0,line:0,shuffle:0,shield:0,boost:0,freeze:0,rainbow:0,score:0,rule:0};
+                                                                                                                      // アイテム税：所持量が多いほど、また高性能アイテムを多く持つほど重くなる
+                                                                                                                      const itemTaxWeight={stop:1,bomb:1,line:1,shuffle:1,shield:2,boost:2,freeze:2,rainbow:3,score:2,rule:3};
+                                                                                                                      let itemTaxTimer=null,itemTaxNext=60000;
+
 
                                                                                                                       function rand(){return colors[Math.floor(Math.random()*colors.length)]}
                                                                                                                       function makeBoard(){
@@ -1860,6 +1889,38 @@ let playerDefeated=false;
                                                                                                                        checkTitles();
                                                                                                                        saveTitleProgress();
                                                                                                                       }
+                                                                                                                      function getItemTax(){
+                                                                                                                        let total=0,weighted=0;
+                                                                                                                        for(const k in itemState){const n=Math.max(0,itemState[k]||0);total+=n;weighted+=n*(itemTaxWeight[k]||1)}
+                                                                                                                        if(!total)return {count:0,tax:0};
+                                                                                                                        const tax=Math.max(1,Math.ceil(weighted/7));
+                                                                                                                        return {count:total,tax};
+                                                                                                                      }
+                                                                                                                      function collectItemTax(){
+                                                                                                                        const info=getItemTax();
+                                                                                                                        if(!info.count){itemTaxNext=60000;return;}
+                                                                                                                        let remaining=info.tax;
+                                                                                                                        // 高性能アイテムから優先して徴収。大量所持ほど徴収数が増える。
+                                                                                                                        const order=["rule","rainbow","shield","boost","freeze","score","bomb","line","shuffle","stop"];
+                                                                                                                        for(const k of order){
+                                                                                                                          while(remaining>0 && itemState[k]>0){itemState[k]--;remaining--;}
+                                                                                                                          if(remaining<=0)break;
+                                                                                                                        }
+                                                                                                                        const actual=info.tax-remaining;
+                                                                                                                        itemTaxNext=60000;updateItems();
+                                                                                                                        const panel=document.getElementById("itemTaxPanel");
+                                                                                                                        if(panel){panel.classList.remove("itemTaxAlert");void panel.offsetWidth;panel.classList.add("itemTaxAlert");}
+                                                                                                                        msg("🏛️ アイテム税を"+actual+"個徴収されました！ 所持数が多いほど税金が重くなります。",true);
+                                                                                                                      }
+                                                                                                                      function startItemTaxTimer(){
+                                                                                                                        if(itemTaxTimer)clearInterval(itemTaxTimer);
+                                                                                                                        itemTaxNext=60000;
+                                                                                                                        itemTaxTimer=setInterval(()=>{itemTaxNext-=1000;if(itemTaxNext<=0){collectItemTax();}},1000);
+                                                                                                                      }
+                                                                                                                      function updateItemTaxUI(){
+                                                                                                                        const cd=document.getElementById("itemTaxCountdown");
+                                                                                                                        if(cd)cd.textContent=Math.max(1,Math.ceil(itemTaxNext/1000))+"秒";
+                                                                                                                      }
                                                                                                                       function updateItems(){
                                                                                                                        for(const k in itemState){
                                                                                                                         const e=document.getElementById("it"+k.charAt(0).toUpperCase()+k.slice(1));
@@ -1868,6 +1929,7 @@ let playerDefeated=false;
                                                                                                                         const count=e.querySelector(".count");
                                                                                                                         if(count) count.textContent=" ×"+itemState[k];
                                                                                                                        }
+                                                                                                                       updateItemTaxUI();
                                                                                                                       }
                                                                                                                       function msg(t,bad){const e=document.getElementById("msg");e.textContent=t;e.className="msg "+(bad?"bad":"good")}
 
@@ -2499,6 +2561,7 @@ freezeRandomBlocks(iceCount);
                                                                                                                        lastClearedColor=null;sealedColor=null;selected=null;shield=0;freeze=0;boostNext=1;
                                                                                                                        for(const k in itemState)itemState[k]=0;
                                                                                                                        document.getElementById("overlay").style.display="none";makeBoard();msg("まずは同じ色を3個以上つなげよう。",false);
+                                                                                                                       startItemTaxTimer();
 
                                                                                                                         respawnEnemy();
                                                                                                                          startEnemyAttackTimer();
@@ -3355,8 +3418,50 @@ function openDungeon(){const ov=document.getElementById('dungeonClearOverlay');i
 const MARKET_SAVE_KEY="panikus_market_v1",MARKET_TICK_MS=10000;
 const marketAssets=[
 {id:"food",name:"食料",icon:"🍚",base:120,min:45,max:520,vol:.11},{id:"energy",name:"エネルギー",icon:"⚡",base:180,min:55,max:700,vol:.14},{id:"land",name:"土地",icon:"🏞️",base:500,min:180,max:1800,vol:.075},{id:"rare",name:"レアアイテム",icon:"💎",base:850,min:250,max:3600,vol:.18},{id:"crystal",name:"クリスタル",icon:"🔮",base:1300,min:400,max:5200,vol:.21}];
-let marketState={money:10000,prices:{},holdings:{},history:{},tick:0,news:"📰 市場オープン！"},marketTimer=null,marketNextTick=10000;
+let marketState={money:10000,prices:{},holdings:{},history:{},tick:0,news:"📰 市場オープン！"},marketTimer=null,marketNextTick=10000,marketTaxTimer=null,marketTaxNext=60000;
 function marketLoad(){try{const s=JSON.parse(localStorage.getItem(MARKET_SAVE_KEY)||"null");if(s)marketState={...marketState,...s,prices:{...marketState.prices,...(s.prices||{})},holdings:{...marketState.holdings,...(s.holdings||{})},history:s.history||{}}}catch(e){}marketAssets.forEach(a=>{if(!Number.isFinite(marketState.prices[a.id]))marketState.prices[a.id]=a.base;if(!Number.isFinite(marketState.holdings[a.id]))marketState.holdings[a.id]=0;if(!Array.isArray(marketState.history[a.id])||!marketState.history[a.id].length)marketState.history[a.id]=[marketState.prices[a.id]];marketState.history[a.id]=marketState.history[a.id].slice(-20)})}
+function marketTaxAmount(){
+  let tax=0;
+  marketAssets.forEach(a=>{
+    const qty=Math.max(0,Number(marketState.holdings[a.id])||0);
+    const value=(Number(marketState.prices[a.id])||a.base)*qty;
+    tax+=value*0.02;
+  });
+  return Math.max(0,Math.ceil(tax));
+}
+function updateMarketTaxUI(){
+  const cd=document.getElementById("marketTaxCountdown");
+  if(cd)cd.textContent=Math.max(1,Math.ceil(marketTaxNext/1000))+"秒";
+  const detail=document.getElementById("marketTaxDetail");
+  if(detail)detail.textContent="次回の予想税額："+marketMoney(marketTaxAmount())+"　（所持量×現在価格の2%）";
+}
+function collectMarketTax(){
+  const tax=marketTaxAmount();
+  if(tax<=0){
+    marketTaxNext=60000;
+    updateMarketTaxUI();
+    return;
+  }
+  const paid=Math.min(marketState.money,tax);
+  marketState.money=Math.max(0,marketState.money-paid);
+  marketState.news=paid<tax?"🏛️ 商品保有税を徴収！ お金が足りず"+marketMoney(tax-paid)+"未払いです。":"🏛️ 商品保有税を"+marketMoney(paid)+"徴収されました！";
+  marketTaxNext=60000;
+  marketSave();
+  const box=document.getElementById("marketTaxBox");
+  if(box){box.classList.remove("marketTaxAlert");void box.offsetWidth;box.classList.add("marketTaxAlert");}
+  renderMarket();
+}
+function marketStartTaxTimer(){
+  clearInterval(marketTaxTimer);
+  marketTaxNext=60000;
+  updateMarketTaxUI();
+  marketTaxTimer=setInterval(()=>{
+    marketTaxNext-=1000;
+    if(marketTaxNext<=0)collectMarketTax();
+    else updateMarketTaxUI();
+  },1000);
+}
+function marketStopTaxTimer(){clearInterval(marketTaxTimer);marketTaxTimer=null;}
 function marketSave(){try{localStorage.setItem(MARKET_SAVE_KEY,JSON.stringify(marketState))}catch(e){}}
 function marketMoney(n){return "¥"+Math.max(0,Math.round(n)).toLocaleString()}
 function marketTotal(){return marketState.money+marketAssets.reduce((s,a)=>s+marketState.prices[a.id]*(marketState.holdings[a.id]||0),0)}
@@ -3366,10 +3471,10 @@ function marketSellAll(id){marketTrade(id,-(marketState.holdings[id]||0))}
 function marketEvent(){const e=[["食料不足！ 食料の需要が急増。","food",.24],["豊作！ 食料価格が下落。","food",-.18],["発電トラブル！ エネルギー価格が急騰。","energy",.27],["新エネルギー発見！ エネルギー価格が下落。","energy",-.2],["開発計画発表！ 土地への注目が高まる。","land",.17],["レアアイテムが大人気！","rare",.3],["偽物流通の噂！ レアアイテム価格が急落。","rare",-.25],["クリスタル鉱脈発見！ 供給増で下落。","crystal",-.22],["謎のエネルギー反応！ クリスタルが高騰。","crystal",.28],["市場全体が活況！ 全商品が上昇。","all",.08],["世界的な不安！ 市場全体が下落。","all",-.08]];return e[Math.floor(Math.random()*e.length)]}
 function marketTick(){const ev=Math.random()<.38?marketEvent():null,panic=Math.random()<.1;marketAssets.forEach(a=>{let m=(Math.random()-.5)*2*a.vol+(Math.random()-.5)*.08;if(ev&&(ev[1]===a.id||ev[1]==="all"))m+=ev[2];if(panic)m+=(Math.random()-.5)*a.vol*2.4;let n=marketState.prices[a.id]*(1+m);if(panic&&Math.random()<.35)n*=Math.random()<.5?.72:1.35;n=Math.max(a.min,Math.min(a.max,n));marketState.prices[a.id]=Math.round(n);marketState.history[a.id].push(n);marketState.history[a.id]=marketState.history[a.id].slice(-20)});marketState.tick++;marketState.news=panic?"🚨 PANIC MARKET！ 価格が激しく変動！":ev?"📰 "+ev[0]:"📈 市場は通常変動中。";marketNextTick=10000;marketSave();renderMarket()}
 function marketStartTimer(){clearInterval(marketTimer);marketNextTick=10000;marketTimer=setInterval(()=>{marketNextTick-=1000;if(marketNextTick<=0)marketTick();else{const e=document.getElementById("marketCountdown");if(e)e.textContent=Math.ceil(marketNextTick/1000)+"秒"}},1000)}
-function marketStopTimer(){clearInterval(marketTimer);marketTimer=null}
+function marketStopTimer(){clearInterval(marketTimer);marketTimer=null;marketStopTaxTimer()}
 function renderMarketChart(){const c=document.getElementById("marketChart");if(!c)return;const w=c.clientWidth||700,h=170,d=window.devicePixelRatio||1;c.width=w*d;c.height=h*d;const x=c.getContext("2d");x.scale(d,d);const all=marketAssets.flatMap(a=>marketState.history[a.id]);const lo=Math.min(...all),hi=Math.max(...all),range=Math.max(1,hi-lo),cols=["#59e1ff","#7dff9b","#ffd84d","#ff77c8","#b88cff"];x.strokeStyle="rgba(125,223,255,.12)";for(let i=1;i<5;i++){x.beginPath();x.moveTo(0,i*h/5);x.lineTo(w,i*h/5);x.stroke()}marketAssets.forEach((a,k)=>{const ds=marketState.history[a.id];x.beginPath();ds.forEach((v,i)=>{const xx=i*w/(ds.length-1||1),yy=h-10-(v-lo)/range*(h-25);i?x.lineTo(xx,yy):x.moveTo(xx,yy)});x.strokeStyle=cols[k];x.lineWidth=2;x.stroke()})}
-function renderMarket(){const money=document.getElementById("marketMoney"),assets=document.getElementById("marketAssets"),news=document.getElementById("marketNews"),table=document.getElementById("marketTable"),hold=document.getElementById("marketHoldings");if(!money||!table)return;money.textContent=marketMoney(marketState.money);assets.textContent=marketMoney(marketTotal());news.textContent=marketState.news;document.getElementById("marketMainBox")?.classList.toggle("marketPanic",/PANIC/.test(marketState.news));table.innerHTML="";marketAssets.forEach(a=>{const p=marketState.prices[a.id],o=marketState.holdings[a.id]||0,h=marketState.history[a.id],pct=h.length>1?(p-h[h.length-2])/h[h.length-2]*100:0,row=document.createElement("div");row.className="marketAsset";row.innerHTML=`<div><div class="marketAssetName">${a.icon} ${a.name}</div><div class="marketAssetSub">所持 ${o}個</div></div><div class="marketPrice">${marketMoney(p)}</div><div class="marketChange ${pct>0?"marketUp":pct<0?"marketDown":"marketFlat"}">${pct>0?"▲":pct<0?"▼":"—"} ${Math.abs(pct).toFixed(1)}%</div><div class="marketControls"><button class="marketBtn" onclick="marketTrade('${a.id}',1)">＋1 買う</button><button class="marketBtn" onclick="marketTrade('${a.id}',-1)" ${o<=0?"disabled":""}>−1 売る</button><button class="marketBtn" onclick="marketBuyMax('${a.id}')">まとめ買い</button><button class="marketBtn" onclick="marketSellAll('${a.id}')" ${o<=0?"disabled":""}>全部売る</button></div>`;table.appendChild(row)});hold.innerHTML="";marketAssets.forEach(a=>{const e=document.createElement("div");e.className="marketHolding";e.innerHTML=`${a.icon} ${a.name}<b>${marketState.holdings[a.id]||0}個</b>${marketMoney((marketState.holdings[a.id]||0)*marketState.prices[a.id])}`;hold.appendChild(e)});const cd=document.getElementById("marketCountdown");if(cd)cd.textContent=Math.max(1,Math.ceil(marketNextTick/1000))+"秒";requestAnimationFrame(renderMarketChart)}
-function openMarket(){marketLoad();renderMarket();marketStartTimer()}
+function renderMarket(){const money=document.getElementById("marketMoney"),assets=document.getElementById("marketAssets"),news=document.getElementById("marketNews"),table=document.getElementById("marketTable"),hold=document.getElementById("marketHoldings");if(!money||!table)return;money.textContent=marketMoney(marketState.money);assets.textContent=marketMoney(marketTotal());news.textContent=marketState.news;document.getElementById("marketMainBox")?.classList.toggle("marketPanic",/PANIC/.test(marketState.news));table.innerHTML="";marketAssets.forEach(a=>{const p=marketState.prices[a.id],o=marketState.holdings[a.id]||0,h=marketState.history[a.id],pct=h.length>1?(p-h[h.length-2])/h[h.length-2]*100:0,row=document.createElement("div");row.className="marketAsset";row.innerHTML=`<div><div class="marketAssetName">${a.icon} ${a.name}</div><div class="marketAssetSub">所持 ${o}個</div></div><div class="marketPrice">${marketMoney(p)}</div><div class="marketChange ${pct>0?"marketUp":pct<0?"marketDown":"marketFlat"}">${pct>0?"▲":pct<0?"▼":"—"} ${Math.abs(pct).toFixed(1)}%</div><div class="marketControls"><button class="marketBtn" onclick="marketTrade('${a.id}',1)">＋1 買う</button><button class="marketBtn" onclick="marketTrade('${a.id}',-1)" ${o<=0?"disabled":""}>−1 売る</button><button class="marketBtn" onclick="marketBuyMax('${a.id}')">まとめ買い</button><button class="marketBtn" onclick="marketSellAll('${a.id}')" ${o<=0?"disabled":""}>全部売る</button></div>`;table.appendChild(row)});hold.innerHTML="";marketAssets.forEach(a=>{const e=document.createElement("div");e.className="marketHolding";e.innerHTML=`${a.icon} ${a.name}<b>${marketState.holdings[a.id]||0}個</b>${marketMoney((marketState.holdings[a.id]||0)*marketState.prices[a.id])}`;hold.appendChild(e)});const cd=document.getElementById("marketCountdown");if(cd)cd.textContent=Math.max(1,Math.ceil(marketNextTick/1000))+"秒";updateMarketTaxUI();requestAnimationFrame(renderMarketChart)}
+function openMarket(){marketLoad();renderMarket();marketStartTimer();marketStartTaxTimer()}
 
 loadTitleProgress();
 loadCharacterProgress();

@@ -557,7 +557,77 @@
 @media(max-width:900px){.slotGrid{grid-template-columns:1fr}.slotCard{max-width:560px;margin:auto}}
 
 /* PANIC MARKET */ .marketBox{background:linear-gradient(145deg,rgba(10,25,40,.96),rgba(8,10,22,.96));border:1px solid #17647b;border-radius:16px;padding:14px;margin-bottom:14px}.marketTop{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}.marketStat{background:#071321;border:1px solid #29455f;border-radius:12px;padding:10px;text-align:center}.marketStat span{display:block;font-size:11px;color:#9fb4c9}.marketStat b{display:block;font-size:21px}.marketCountdown{color:#ffd84d!important}.marketNews{padding:10px 12px;border:1px solid rgba(255,216,77,.35);border-radius:10px;background:rgba(255,190,50,.07);font-weight:800;margin-bottom:12px;min-height:42px}.marketTable{display:grid;gap:8px}.marketAsset{display:grid;grid-template-columns:1.2fr .9fr .75fr 1.35fr;align-items:center;gap:8px;padding:10px;border:1px solid #29455f;border-radius:12px;background:#0b1828}.marketAssetName{font-weight:900}.marketAssetSub{font-size:10px;color:#91a8bc}.marketPrice{text-align:right;font-weight:1000;font-size:17px}.marketChange{text-align:right;font-size:12px;font-weight:900}.marketUp{color:#75df9a}.marketDown{color:#ff7180}.marketFlat{color:#a9bfd2}.marketControls{display:grid;grid-template-columns:1fr 1fr;gap:5px}.marketBtn{padding:7px 5px;border:1px solid #315477;border-radius:8px;background:#071923;color:#eaffff;font-weight:900;cursor:pointer}.marketBtn:disabled{opacity:.35}.marketHoldings{margin-top:12px;display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.marketHolding{padding:7px;border-radius:9px;background:#071321;border:1px solid #29455f;text-align:center;font-size:11px}.marketHolding b{display:block;font-size:15px;color:#7df9ff}.marketChartWrap{margin-top:12px;border:1px solid #29455f;border-radius:12px;background:#050b12;padding:10px}.marketChart{width:100%;height:170px;display:block}.marketPanic{animation:marketPanic .55s infinite alternate;border-color:#ff4d67!important}@keyframes marketPanic{from{box-shadow:0 0 5px rgba(255,60,90,.15)}to{box-shadow:0 0 24px rgba(255,60,90,.5)}}@media(max-width:700px){.marketTop{grid-template-columns:1fr 1fr}.marketAsset{grid-template-columns:1fr 1fr}.marketPrice,.marketChange{text-align:left}.marketControls{grid-column:1/-1}.marketHoldings{grid-template-columns:repeat(2,1fr)}}
-.pvpMemberList{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}.pvpMember{padding:9px;border:1px solid #24566a;border-radius:9px;background:#081722}.pvpPlayersGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.pvpPlayerCard{padding:10px;border:1px solid #17647b;border-radius:12px;background:#07131c;text-align:center}.pvpScore{font-size:24px;font-weight:900;color:#7deeff}.pvpScore small{font-size:12px}.pvpGameTitle{text-align:center;font-size:20px;font-weight:900;margin:10px}.pvpQuestion{text-align:center;padding:18px}.pvpQuestion h2{margin:5px 0 16px}.pvpOptions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:620px;margin:auto}.pvpOption,.pvpColorBtn,.pvpNumberBtn{padding:18px;border:1px solid #1c7890;border-radius:14px;background:#0b2331;color:#eaffff;font-size:17px;font-weight:900;cursor:pointer}.pvpOption:hover,.pvpColorBtn:hover,.pvpNumberBtn:hover{filter:brightness(1.25);transform:translateY(-2px)}.pvpTarget{font-size:38px;font-weight:900;margin:12px}.pvpFinalRanking{max-width:620px;margin:15px auto}.pvpRank{display:grid;grid-template-columns:55px 1fr 100px;gap:10px;padding:12px;border-bottom:1px solid #214657;background:#07131c}.pvpRank.me{outline:2px solid #00d9ff}.pvpRank strong{text-align:right}.newActionBtn{margin:5px}@media(max-width:700px){.pvpPlayersGrid{grid-template-columns:repeat(2,1fr)}.pvpOptions{grid-template-columns:1fr}.pvpMemberList{grid-template-columns:1fr}}</style>
+.pvpMemberList{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}.pvpMember{padding:9px;border:1px solid #24566a;border-radius:9px;background:#081722}.pvpPlayersGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.pvpPlayerCard{padding:10px;border:1px solid #17647b;border-radius:12px;background:#07131c;text-align:center}.pvpScore{font-size:24px;font-weight:900;color:#7deeff}.pvpScore small{font-size:12px}.pvpGameTitle{text-align:center;font-size:20px;font-weight:900;margin:10px}.pvpQuestion{text-align:center;padding:18px}.pvpQuestion h2{margin:5px 0 16px}.pvpOptions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:620px;margin:auto}.pvpOption,.pvpColorBtn,.pvpNumberBtn{padding:18px;border:1px solid #1c7890;border-radius:14px;background:#0b2331;color:#eaffff;font-size:17px;font-weight:900;cursor:pointer}.pvpOption:hover,.pvpColorBtn:hover,.pvpNumberBtn:hover{filter:brightness(1.25);transform:translateY(-2px)}.pvpTarget{font-size:38px;font-weight:900;margin:12px}.pvpFinalRanking{max-width:620px;margin:15px auto}.pvpRank{display:grid;grid-template-columns:55px 1fr 100px;gap:10px;padding:12px;border-bottom:1px solid #214657;background:#07131c}.pvpRank.me{outline:2px solid #00d9ff}.pvpRank strong{text-align:right}.newActionBtn{margin:5px}@media(max-width:700px){.pvpPlayersGrid{grid-template-columns:repeat(2,1fr)}.pvpOptions{grid-template-columns:1fr}.pvpMemberList{grid-template-columns:1fr}}
+/* 手札チャレンジ：カード表示を見やすく */
+.cardHand, .cardPlayers {
+  gap: 12px !important;
+}
+.cardHandBtn, .cardField {
+  width: 92px !important;
+  min-width: 92px !important;
+  height: 128px !important;
+  border-radius: 14px !important;
+  border: 2px solid rgba(255,255,255,.28) !important;
+  background: linear-gradient(145deg,#ffffff,#e9edf5) !important;
+  color: #172033 !important;
+  box-shadow: 0 5px 14px rgba(0,0,0,.22) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.cardHandBtn:hover {
+  transform: translateY(-4px) !important;
+}
+.cardHandBtn.selected {
+  outline: 4px solid #ffd54a !important;
+  transform: translateY(-7px) !important;
+}
+.cardFaceNum {
+  font-size: 38px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  margin-top: 8px !important;
+}
+.cardFaceType {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  margin-top: 7px !important;
+}
+.cardFaceColor {
+  font-size: 13px !important;
+  text-align: center !important;
+  margin-top: 5px !important;
+  opacity: .8 !important;
+}
+.cardFaceBack {
+  font-size: 32px !important;
+  text-align: center !important;
+  padding-top: 38px !important;
+}
+.cardField .cardFaceNum {
+  margin-top: 10px !important;
+}
+.cardFieldLabel {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  opacity: .75 !important;
+  text-align: center !important;
+}
+.cardTurn {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  background: rgba(255,255,255,.10) !important;
+}
+.cardActions button {
+  min-height: 44px !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+}
+
+</style>
   
 <style id="ultra-rare-gacha">
 .gachaUltraRareNote{margin:8px 0 0;text-align:center;font-size:12px;color:#ffd84d;font-weight:800}
@@ -3442,10 +3512,7 @@ showHome();
 <div id="pvpRoomPanel" class="newGameCard" style="display:none"><h3>👥 ルームメンバー <span id="pvpMemberCount">1/4</span></h3><div id="pvpMemberList" class="pvpMemberList"></div><div id="pvpRoomCode" class="newRoomCode"></div><p>このルームはゲーム終了後も残ります。</p><button class="newActionBtn" onclick="pvpLeaveRoom()">🚪 ルームを退出</button></div>
 <div id="pvpStatus" class="newStatus">オンライン対戦の準備OK！</div>
 <div id="pvpSelectArea" class="newSelectArea" style="display:none"><h2 style="text-align:center">🎮 対戦ゲームを選択</h2><p id="pvpSelectHint" style="text-align:center;color:#9db8c9">ルーム作成者がゲームを選択します。</p><div class="newBattleGrid">
-<div class="newGameCard"><h3>🧠 ルールハック</h3><p>4つの答えから正しいものを選べ！ルールが次々変わる。</p><button class="newGameBtn" onclick="pvpChooseGame('rule')">このゲームで対戦</button></div>
-<div class="newGameCard"><h3>🎨 カラークラッシュ</h3><p>指定された色を誰より早くタップ！連続正解で高得点。</p><button class="newGameBtn" onclick="pvpChooseGame('color')">このゲームで対戦</button></div>
-<div class="newGameCard"><h3>💥 パニックナンバー</h3><p>表示された数字を探してタップ！ミスすると減点。</p><button class="newGameBtn" onclick="pvpChooseGame('number')">このゲームで対戦</button></div>
-<div class="newGameCard"><h3>🃏 手札チャレンジ</h3><p>3枚の非公開手札と公開カードで読み合い！相手の場を奪ったり、全員の手札をシャッフルできます。</p><button class="newGameBtn" onclick="pvpChooseGame('card')">このゲームで対戦</button></div>
+<div class="newGameCard"><h3>🃏 手札チャレンジ</h3><p>3枚の非公開手札と公開カードで読み合い！交換・強奪・全員シャッフル・ルール変更で勝利を目指します。</p><button id="pvpCardChooseBtn" class="newGameBtn" onclick="pvpChooseGame('card')">このゲームで対戦</button></div>
 </div></div>
 <div id="pvpArena" class="newArena" style="display:none"><div id="pvpPlayers" class="pvpPlayersGrid"></div><div class="newTimer">残り <span id="pvpTime">45</span>秒</div><div id="pvpGameTitle" class="pvpGameTitle"></div><div id="pvpPlayBox" class="newPlayBox"></div><div id="pvpLog" class="resultText">対戦開始！</div></div>
 <div id="pvpEnd" class="newEnd" style="display:none"><h2 id="pvpEndText"></h2><p id="pvpEndDetail"></p><div id="pvpFinalRanking" class="pvpFinalRanking"></div><button class="newActionBtn" onclick="pvpRematch()">🔄 同じルームで再戦</button><button class="newActionBtn" onclick="pvpBackToSelect()">🎮 ゲーム選択へ</button><button class="newActionBtn" onclick="pvpLeaveRoom()">🚪 ルームを退出</button></div>
@@ -3462,13 +3529,13 @@ function send(c,m){try{if(c&&c.open)c.send(m)}catch(e){}}
 function broadcast(m){Object.values(connections).forEach(c=>send(c,m))}
 function arr(){return Object.values(players).sort((a,b)=>a.id.localeCompare(b.id))}
 function render(){const list=$('pvpMemberList'),grid=$('pvpPlayers');if(list)list.innerHTML=arr().map((p,i)=>`<div class="pvpMember">${i?'👤':'👑'} ${esc(p.name)} ${p.id===myId?'（あなた）':''}</div>`).join('');if($('pvpMemberCount'))$('pvpMemberCount').textContent=arr().length+'/4';if(grid)grid.innerHTML=arr().map(p=>`<div class="pvpPlayerCard"><strong>${esc(p.name)}</strong><div class="pvpScore">${p.score||0}<small> pt</small></div></div>`).join('')}
-function showSelect(){if(timer)clearInterval(timer);gameRunning=false;$('pvpRoomPanel').style.display='block';$('pvpSelectArea').style.display='block';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';$('pvpSelectHint').textContent='ゲームを選択してください。誰でも選択できます。';render();status('ゲームを選択できます。');}
+function showSelect(){if(timer)clearInterval(timer);gameRunning=false;$('pvpRoomPanel').style.display='block';$('pvpSelectArea').style.display='block';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';$('pvpSelectHint').textContent=isHost?'👑 ホストだけがゲームを選択できます。':'⏳ ホストがゲームを選択するのを待っています。';const b=$('pvpCardChooseBtn');if(b){b.disabled=!isHost;b.style.opacity=isHost?'1':'.5';b.style.cursor=isHost?'pointer':'not-allowed';}render();status(isHost?'ゲームを選択してください。':'ホストがゲームを選択するのを待っています。');}
 function create(){myName=(($('pvpHostName').value||'Player 1').trim()||'Player 1').slice(0,12);loadPeer(()=>{isHost=true;roomCode=code();myId='P1';players={P1:{id:'P1',name:myName,score:0}};peer=new Peer('PANICSHIFT-'+roomCode,{debug:0});status('ルーム作成中…');peer.on('open',()=>{$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;showSelect();status('ルーム作成完了！1〜4人でゲームを選べます。');});peer.on('connection',c=>{if(Object.keys(players).length>=4){send(c,{type:'full'});return}const id='P'+(Object.keys(players).length+1);connections[id]=c;c.on('open',()=>send(c,{type:'welcome',id,roomCode,players}));c.on('data',m=>hostMsg(id,m));c.on('close',()=>remove(id));c.on('error',()=>remove(id))});peer.on('error',e=>status('接続エラー：'+(e.type||'再試行してください')));})}
 function join(){myName=(($('pvpJoinName').value||'Player 2').trim()||'Player 2').slice(0,12);roomCode=($('pvpRoomInput').value||'').trim().toUpperCase();if(roomCode.length!==6){status('6文字のルームコードを入力してください。');return}loadPeer(()=>{isHost=false;peer=new Peer({debug:0});peer.on('open',()=>{const c=peer.connect('PANICSHIFT-'+roomCode,{reliable:true});connections.host=c;c.on('open',()=>send(c,{type:'join',name:myName}));c.on('data',guestMsg);c.on('close',()=>status('ホストとの接続が切れました。'))});peer.on('error',()=>status('接続エラー：ルームコードを確認してください。'))})}
-function hostMsg(id,m){if(m.type==='join'){players[id]={id,name:(m.name||'Player '+id.slice(1)).slice(0,12),score:0};send(connections[id],{type:'welcome',id,roomCode,players});broadcast({type:'roster',players});render();status(`${players[id].name} が参加しました！ ${Object.keys(players).length}/4人`)}else if(m.type==='action'){action(id,m)}else if(m.type==='chooseGame'){if(players[id])choose(m.game)}else if(m.type==='rematch'){showSelect();broadcast({type:'select'})}else if(m.type==='backSelect'){showSelect();broadcast({type:'select'})}else if(m.type==='leave'){remove(id)}}
-function guestMsg(m){if(m.type==='welcome'){myId=m.id;players=m.players;roomCode=m.roomCode;$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;render();showSelect();status('参加しました！ゲームを選べます。')}else if(m.type==='roster'){players=m.players;render()}else if(m.type==='start'){players=m.players;gameType=m.game;cardHand=m.hand||[];startLocal(m.data)}else if(m.type==='state'){players=m.players;currentRound=m.data;if(m.data&&m.data.card)gameType='card';if(gameType==='card'){cardHand=m.hand||cardHand;}render();setup(m.data);$('pvpLog').textContent=m.log||''}else if(m.type==='cardPrivate'){cardHand=m.hand||[];if(gameType==='card')setup(currentRound)}else if(m.type==='finish'){finishLocal(m.players,m.reason)}else if(m.type==='select'){showSelect()}else if(m.type==='hostLeave'){leave(true)}else if(m.type==='full'){status('このルームは満員です（最大4人）。')}}
+function hostMsg(id,m){if(m.type==='join'){players[id]={id,name:(m.name||'Player '+id.slice(1)).slice(0,12),score:0};send(connections[id],{type:'welcome',id,roomCode,players});broadcast({type:'roster',players});render();status(`${players[id].name} が参加しました！ ${Object.keys(players).length}/4人`)}else if(m.type==='action'){action(id,m)}else if(m.type==='rematch'){showSelect();broadcast({type:'select',players})}else if(m.type==='backSelect'){showSelect();broadcast({type:'select',players})}else if(m.type==='leave'){remove(id)}}
+function guestMsg(m){if(m.type==='welcome'){myId=m.id;players=m.players;roomCode=m.roomCode;$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;render();showSelect();status('参加しました！ゲームを選べます。')}else if(m.type==='roster'){players=m.players;render()}else if(m.type==='start'){players=m.players;gameType=m.game;cardHand=m.hand||[];startLocal(m.data)}else if(m.type==='state'){players=m.players;currentRound=m.data;if(m.data&&m.data.card)gameType='card';if(gameType==='card'){cardHand=m.hand||cardHand;}render();setup(m.data);$('pvpLog').textContent=m.log||''}else if(m.type==='cardPrivate'){cardHand=m.hand||[];if(gameType==='card')setup(currentRound)}else if(m.type==='finish'){finishLocal(m.players,m.reason)}else if(m.type==='select'){players=m.players||players;showSelect()}else if(m.type==='hostLeave'){leave(true)}else if(m.type==='full'){status('このルームは満員です（最大4人）。')}}
 function remove(id){if(players[id]){const n=players[id].name;delete players[id];delete connections[id];render();if(isHost)broadcast({type:'roster',players});status(`${n} が退出しました。残り ${Object.keys(players).length}/4人`)}}
-function choose(g){if(!isHost){if(connections.host){send(connections.host,{type:'chooseGame',game:g});status('ゲーム開始をホストに送信しました！')}return}if(Object.keys(players).length<1){status('プレイヤーがいないため開始できません。');return}gameType=g;Object.values(players).forEach(p=>p.score=0);if(g==='card'){initCardGame();return}const d=newRound(g);broadcast({type:'start',game:g,data:d,players});startLocal(d)}
+function choose(g){if(!isHost)return;if(g!=='card'){status('現在選択できるバトルゲームは手札チャレンジだけです。');return}if(Object.keys(players).length<1){status('プレイヤーがいないため開始できません。');return}gameType=g;Object.values(players).forEach(p=>p.score=0);if(g==='card'){initCardGame();return}const d=newRound(g);broadcast({type:'start',game:g,data:d,players});startLocal(d)}
 function newRound(g){roundIndex++;if(g==='rule'){const q=[['PANIC SHIFTで一番大事なのは？',['ルールを攻略する','運だけ','何もしない','画面を閉じる'],0],['3個以上つながると？',['消える','増える','止まる','保存される'],0],['4人対戦の最大人数は？',['4人','2人','8人','1人'],0],['市場で基本なのは？',['安く買って高く売る','高く買って安く売る','全部捨てる','何もしない'],0]][Math.floor(Math.random()*4)];return{round:roundIndex,q:q[0],options:q[1],answer:q[2]}}if(g==='color'){const c=[['赤','🔴'],['青','🔵'],['黄','🟡'],['緑','🟢'],['紫','🟣'],['水色','🩵']];return{round:roundIndex,target:(()=>{const x=c[Math.floor(Math.random()*c.length)];return x})(),options:c}}const n=Math.floor(Math.random()*9)+1,a=[n];while(a.length<4){const x=Math.floor(Math.random()*9)+1;if(!a.includes(x))a.push(x)}return{round:roundIndex,target:n,options:a.sort(()=>Math.random()-.5)}}
 function startLocal(d){gameRunning=true;timeLeft=45;$('pvpSelectArea').style.display='none';$('pvpArena').style.display='block';$('pvpEnd').style.display='none';currentRound=d;render();setup(d);if(timer)clearInterval(timer);timer=setInterval(()=>{timeLeft--;if($('pvpTime'))$('pvpTime').textContent=timeLeft;if(timeLeft<=0){clearInterval(timer);if(isHost)finishGame('時間切れ！')}},1000);$('pvpTime').textContent=45}
 function setup(d){const box=$('pvpPlayBox');$('pvpGameTitle').textContent=gameType==='rule'?'🧠 ルールハック':gameType==='color'?'🎨 カラークラッシュ':gameType==='number'?'💥 パニックナンバー':'🃏 手札チャレンジ';if(gameType==='card'){setupCardGame(d);return}if(gameType==='rule')box.innerHTML=`<div class="pvpQuestion"><h2>${esc(d.q)}</h2><div class="pvpOptions">${d.options.map((x,i)=>`<button class="pvpOption" onclick="pvpAnswer(${i})">${esc(x)}</button>`).join('')}</div></div>`;else if(gameType==='color')box.innerHTML=`<div class="pvpQuestion"><h2>この色をタップ！</h2><div class="pvpTarget">${d.target[1]} ${esc(d.target[0])}</div><div class="pvpOptions">${d.options.map((x,i)=>`<button class="pvpColorBtn" onclick="pvpAnswer(${i})">${x[1]} ${esc(x[0])}</button>`).join('')}</div></div>`;else box.innerHTML=`<div class="pvpQuestion"><h2>「${d.target}」を探せ！</h2><div class="pvpOptions">${d.options.map((x,i)=>`<button class="pvpNumberBtn" onclick="pvpAnswer(${i})">${x}</button>`).join('')}</div></div>`}
@@ -3478,12 +3545,34 @@ function action(id,m){if(!gameRunning||!players[id]||!currentRound)return;if(gam
 function cardRandom(){return Math.floor(Math.random()*20)+1}
 function cardMakeDeck(){const types=['⚔️','🛡️','💎','🌙'],colors=['🔴','🔵','🟡','🟢'],deck=[];for(let n=1;n<=20;n++)deck.push({n,type:types[(n-1)%4],color:colors[Math.floor((n-1)/4)%4]});return deck.sort(()=>Math.random()-.5)}
 function cardRuleText(r){return{high:'🔺 数字が高いほど勝利',low:'🔻 数字が低いほど勝利',score:'🏆 点数が高いほど勝利（種類・色がそろうと＋1点）'}[r]||'🔺 数字が高いほど勝利'}
-function initCardGame(){cardState={};cardTurnOrder=arr().map(p=>p.id);cardTurnIndex=0;cardSelected=null;cardRule=['high','low','score'][Math.floor(Math.random()*3)];const pool=cardMakeDeck();arr().forEach(p=>{cardState[p.id]={hand:pool.splice(0,3),field:pool.shift()}});gameRunning=true;timeLeft=90;gameType='card';currentRound={card:true,turn:cardTurnOrder[0],rule:cardRule};$('pvpSelectArea').style.display='none';$('pvpArena').style.display='block';$('pvpEnd').style.display='none';startCardTimer();render();setup(currentRound);broadcast({type:'start',game:'card',data:currentRound,players});sendCardState('🎲 今回のルール：'+cardRuleText(cardRule))}
+
+function cardTypeLabel(v){
+  const map={circle:'●',triangle:'▲',square:'■',star:'★'};
+  return map[v] || v || '？';
+}
+function cardColorLabel(v){
+  const map={red:'赤',blue:'青',green:'緑',yellow:'黄',purple:'紫'};
+  return map[v] || v || '？';
+}
+function cardHtml(c, hidden=false){
+  if(hidden) return '<div class="cardFaceBack">🂠</div>';
+  return '<div class="cardFaceNum">'+(c.n ?? c.value ?? '?')+'</div>'+
+         '<div class="cardFaceType">'+cardTypeLabel(c.type)+'</div>'+
+         '<div class="cardFaceColor">'+cardColorLabel(c.color)+'</div>';
+}
+
+function initCardGame(){cardState={};cardTurnOrder=arr().map(p=>p.id);cardTurnIndex=0;cardSelected=null;cardRule=['high','low','score'][Math.floor(Math.random()*3)];const pool=cardMakeDeck();arr().forEach(p=>{cardState[p.id]={hand:pool.splice(0,3),field:pool.shift()}});gameRunning=true;timeLeft=90;gameType='card';currentRound={card:true,turn:cardTurnOrder[0],rule:cardRule};$('pvpSelectArea').style.display='none';$('pvpArena').style.display='block';$('pvpEnd').style.display='none';startCardTimer();render();setup(currentRound);broadcast({type:'start',game:'card',data:currentRound,players});sendCardState('🎲 今回のルール：'+cardRuleText(cardRule));arr().forEach(p=>{if(p.id!==myId)send(connections[p.id],{type:'cardPrivate',hand:cardState[p.id]?.hand?.slice()||[]})})}
 function startCardTimer(){if(timer)clearInterval(timer);$('pvpTime').textContent=90;timer=setInterval(()=>{timeLeft--;if($('pvpTime'))$('pvpTime').textContent=timeLeft;if(timeLeft<=0){clearInterval(timer);if(isHost)finishGame('時間切れ！')}},1000)}
 function cardPublicData(){const fields={};arr().forEach(p=>fields[p.id]=cardState[p.id]?.field);return{card:true,turn:cardTurnOrder[cardTurnIndex],fields,rule:cardRule}}
 function sendCardState(log){const d=cardPublicData();currentRound=d;broadcast({type:'state',players,data:d,log:log||''});arr().forEach(p=>{if(p.id===myId)cardHand=cardState[p.id]?.hand?.slice()||[];else send(connections[p.id],{type:'cardPrivate',hand:cardState[p.id]?.hand?.slice()||[]})})}
 function cardFmt(c){return c?`${c.n}<span class="cardTag">${c.type}</span><span class="cardTag">${c.color}</span>`:'?'}
-function setupCardGame(d){const box=$('pvpPlayBox');if(!d)return;cardRule=d.rule||cardRule;const meTurn=d.turn===myId,names=arr();let html='<div class="cardGameBox">';html+=`<div class="cardTurn">${meTurn?'🔥 あなたのターン':'⏳ '+esc(players[d.turn]?.name||'相手')+'のターン'}</div>`;html+=`<div class="cardRule">現在のルール：${cardRuleText(cardRule)}</div>`;html+='<div class="cardPlayers">';names.forEach(p=>{const field=d.fields?.[p.id],selectable=meTurn&&p.id!==myId?' selectable':'';html+=`<div class="cardPlayer ${p.id===myId?'me ':''}${d.turn===p.id?'myTurn':''}"><div class="cardPlayerName">${p.id===myId?'🧑 ':''}${esc(p.name)}</div><div class="cardHidden">？？？</div><div class="cardField${selectable}" onclick="pvpCardSwapTarget('${p.id}')">${field?cardFmt(field):'?'}</div><div style="font-size:10px;color:#91a8bc">公開カード</div></div>`});html+='</div>';html+='<div class="cardHint">手札3枚は非公開。数字・種類・色を見て交換できます。</div><div class="cardHand">';cardHand.forEach((v,i)=>{html+=`<button class="cardHandBtn ${cardSelected===i?'selected':''}" onclick="pvpCardSelect(${i})" ${!meTurn?'disabled':''}>${cardFmt(v)}<small>手札 ${i+1}</small></button>`});html+='</div>';html+=`<div class="cardActions"><button class="cardActionBtn" onclick="pvpCardOwnSwap()" ${!meTurn||cardSelected===null?'disabled':''}>🔄 自分の場と交換</button><button class="cardActionBtn" onclick="pvpCardShuffle()" ${!meTurn?'disabled':''}>🔀 全員シャッフル</button><button class="cardActionBtn" onclick="pvpCardRuleChange()" ${!meTurn?'disabled':''}>🎲 ルール変更</button><button class="cardActionBtn" onclick="pvpCardSkip()" ${!meTurn?'disabled':''}>⏭️ ターンスキップ</button></div>`;html+='<div class="cardHint">相手の公開カードと交換すると、相手には自分が何のカードを出したかは分かりません。</div></div>';box.innerHTML=html}
+function setupCardGame(d){const box=$('pvpPlayBox');if(!d)return;cardRule=d.rule||cardRule;const meTurn=d.turn===myId,names=arr();let html='<div class="cardGameBox">';html+=`<div class="cardTurn">${meTurn?'🔥 あなたのターン':'⏳ '+esc(players[d.turn]?.name||'相手')+'のターン'}</div>`;html+=`<div class="cardRule">現在のルール：${cardRuleText(cardRule)}</div>`;html+='<div class="cardPlayers">';names.forEach(p=>{const field=d.fields?.[p.id],selectable=meTurn&&p.id!==myId?' selectable':'';html+=`<div class="cardPlayer ${p.id===myId?'me ':''}${d.turn===p.id?'myTurn':''}"><div class="cardPlayerName">${p.id===myId?'🧑 ':''}${esc(p.name)}</div><div class="cardHidden">？？？</div><div class="cardField${selectable}" onclick="pvpCardSwapTarget('${p.id}')">${field?cardFmt(field):'?'}</div><div style="font-size:10px;color:#91a8bc">公開カード</div></div>`});html+='</div>';html+='<div class="cardHint">手札3枚は非公開。数字・種類・色を見て交換できます。</div><div class="cardHand">';cardHand.forEach((v,i)=>{html+=`<button class="cardHandBtn ${cardSelected===i?'selected':''}" onclick="pvpCardSelect(${i})" ${!meTurn?'disabled':''}>${cardFmt(v)}<small>手札 ${i+1}</small></button>`});html+='</div>';html+=`
+<div class="cardLegend" style="margin:10px 0;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.08);font-size:13px;line-height:1.6;">
+  <b>🃏 カードの見方</b>　大きな数字＝数字　／　記号＝種類　／　色＝色<br>
+  <span>手札は自分だけ見えます。場札は全員に公開されます。</span>
+</div>
+
+<div class="cardActions"><button class="cardActionBtn" onclick="pvpCardOwnSwap()" ${!meTurn||cardSelected===null?'disabled':''}>🔄 自分の場と交換</button><button class="cardActionBtn" onclick="pvpCardShuffle()" ${!meTurn?'disabled':''}>🔀 全員シャッフル</button><button class="cardActionBtn" onclick="pvpCardRuleChange()" ${!meTurn?'disabled':''}>🎲 ルール変更</button><button class="cardActionBtn" onclick="pvpCardSkip()" ${!meTurn?'disabled':''}>⏭️ ターンスキップ</button></div>`;html+='<div class="cardHint">相手の公開カードと交換すると、相手には自分が何のカードを出したかは分かりません。</div></div>';box.innerHTML=html}
 function pvpCardSelect(i){if(!gameRunning||gameType!=='card'||currentRound?.turn!==myId)return;cardSelected=i;setup(currentRound)}
 function pvpCardOwnSwap(){if(cardSelected===null)return;if(!isHost)send(connections.host,{type:'action',kind:'ownSwap',handIndex:cardSelected});else cardAction(myId,{kind:'ownSwap',handIndex:cardSelected})}
 function pvpCardSwapTarget(id){if(!gameRunning||gameType!=='card'||currentRound.turn!==myId||id===myId||cardSelected===null)return;if(!isHost)send(connections.host,{type:'action',kind:'swap',targetId:id,handIndex:cardSelected});else cardAction(myId,{kind:'swap',targetId:id,handIndex:cardSelected})}

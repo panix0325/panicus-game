@@ -1520,11 +1520,11 @@ function spinRoulette(cost,rewards,wheelId,rewardId,buttonId){
 
 function hideAllGames(){
   document.getElementById("homeScreen").style.display="none";
-  document.getElementById("puzzleGame").style.display="none";
-  document.getElementById("breakoutGame").style.display="none";
+  const puzzle=document.getElementById("puzzleGame"); if(puzzle) puzzle.style.display="none";
+  const breakout=document.getElementById("breakoutGame"); if(breakout) breakout.style.display="none";
     const dg=document.getElementById("dungeonGame"); if(dg) dg.style.display="none";
-  document.getElementById("dexGame").style.display="none";
-  document.getElementById("titlesGame").style.display="none";
+  const dex=document.getElementById("dexGame"); if(dex) dex.style.display="none";
+  const titles=document.getElementById("titlesGame"); if(titles) titles.style.display="none";
   const gacha=document.getElementById("gachaGame");
   if(gacha) gacha.style.display="none";
   const slot=document.getElementById("slotGame");
@@ -3466,6 +3466,9 @@ function endByScore(){if(pvpGameType==='dodge'){finish(pvpMeScore>=pvpEnemyScore
 function finish(win,reason){if(pvpEnded)return;pvpEnded=true;if(pvpTimer)clearInterval(pvpTimer);if(dodgeLoop)cancelAnimationFrame(dodgeLoop);if(timingLoop)cancelAnimationFrame(timingLoop);send({type:'finish',reason:reason});$('pvpArena').style.display='none';$('pvpEnd').style.display='block';$('pvpEndText').textContent=win?'🏆 YOU WIN!':'💥 YOU LOSE';$('pvpEndDetail').textContent=reason+'　スコア '+pvpMeScore+' / '+pvpEnemyScore}
 window.pvpCreateRoom=create;window.pvpJoinRoom=join;window.pvpChooseGame=choose;window.pvpResetLobby=reset;reset();
 })();
+</script>
+<script>
+(function(){var h=document.getElementById("homeScreen");if(h){h.style.display="block";}["puzzleGame","slotGame","marketGame","titlesGame","dexGame","dungeonGame","gachaGame","pvpGame","breakoutGame","memoryGame"].forEach(function(id){var e=document.getElementById(id);if(e&&id!=="homeScreen")e.style.display="none";});})();
 </script>
 </body>
 </html>

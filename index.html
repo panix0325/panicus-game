@@ -3750,7 +3750,7 @@ function broadcast(m){Object.values(connections).forEach(c=>send(c,m))}
 function arr(){return Object.values(players).sort((a,b)=>a.id.localeCompare(b.id))}
 function render(){const list=$('pvpMemberList'),grid=$('pvpPlayers');if(list)list.innerHTML=arr().map((p,i)=>`<div class="pvpMember">${i?'👤':'👑'} ${esc(p.name)} ${p.id===myId?'（あなた）':''}</div>`).join('');if($('pvpMemberCount'))$('pvpMemberCount').textContent=arr().length+'/4';if(grid)grid.innerHTML=arr().map(p=>`<div class="pvpPlayerCard"><strong>${esc(p.name)}</strong><div class="pvpScore">${p.score||0}<small> pt</small></div></div>`).join('')}
 function showSelect(){if(timer)clearInterval(timer);gameRunning=false;$('pvpRoomPanel').style.display='block';$('pvpSelectArea').style.display='block';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';$('pvpSelectHint').textContent=isHost?'👑 ホストだけがゲームを選択できます。':'⏳ ホストがゲームを選択するのを待っています。';['pvpCardChooseBtn','pvpPokerChooseBtn'].forEach(id=>{const b=$(id);if(b){b.disabled=!isHost;b.style.opacity=isHost?'1':'.5';b.style.cursor=isHost?'pointer':'not-allowed';}});render();status(isHost?'ゲームを選択してください。':'ホストがゲームを選択するのを待っています。');}
-function create(){myName=(($('pvpHostName').value||'Player 1').trim()||'Player 1').slice(0,12);loadPeer(()=>{isHost=true;roomCode=code();myId='P1';players={P1:{id:'P1',name:myName,score:0}};peer=new Peer('PANICSHIFT-'+roomCode,{debug:0});status('ルーム作成中…');peer.on('open',()=>{$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;showSelect();status('ルーム作成完了！1〜4人でゲームを選べます。');});peer.on('connection',c=>{const used=new Set(Object.keys(players));let id=null;for(let n=2;n<=4;n++){if(!used.has('P'+n)){id='P'+n;break}}if(!id){send(c,{type:'full'});try{c.close()}catch(e){}return}connections[id]=c;let joined=false;c.on('open',()=>send(c,{type:'welcome',id,roomCode,players}));c.on('data',m=>{if(m&&m.type==='join'){if(joined)return;joined=true}hostMsg(id,m)});c.on('close',()=>remove(id));c.on('error',()=>remove(id))});peer.on('error',e=>status('接続エラー：'+(e.type||'再試行してください')));})}
+function create(){myName=(($('pvpHostName').value||'Player 1').trim()||'Player 1').slice(0,12);loadPeer(()=>{isHost=true;roomCode=code();myId='P1';players={P1:{id:'P1',name:myName,score:0}};peer=new Peer('PANICSHIFT-'+roomCode,{debug:0});status('ルーム作成中…');peer.on('open',()=>{$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;showSelect();status('ルーム作成完了！1〜4人でゲームを選べます。');});peer.on('connection',c=>{const used=new Set(Object.keys(players));let id=null;for(let n=2;n<=4;n++){if(!used.has('P'+n)){id='P'+n;break}}if(!id){send(c,{type:'full'});try{c.close()}catch(e){}return}connections[id]=c;let joined=false;c.on('open',()=>send(c,{type:'welcome',id,roomCode,players:JSON.parse(JSON.stringify(players))}));c.on('data',m=>{if(!m)return;if(m.type==='join'){if(joined)return;joined=true;hostMsg(id,m);return}if(!joined)return;hostMsg(id,m)});c.on('close',()=>{if(players[id])remove(id);else delete connections[id]});c.on('error',()=>{if(players[id])remove(id);else delete connections[id]});});peer.on('error',e=>status('接続エラー：'+(e.type||'再試行してください')));})}
 function join(){myName=(($('pvpJoinName').value||'Player 2').trim()||'Player 2').slice(0,12);roomCode=($('pvpRoomInput').value||'').trim().toUpperCase();if(roomCode.length!==6){status('6文字のルームコードを入力してください。');return}loadPeer(()=>{isHost=false;peer=new Peer({debug:0});peer.on('open',()=>{const c=peer.connect('PANICSHIFT-'+roomCode,{reliable:true});connections.host=c;c.on('open',()=>send(c,{type:'join',name:myName}));c.on('data',guestMsg);c.on('close',()=>status('ホストとの接続が切れました。'))});peer.on('error',()=>status('接続エラー：ルームコードを確認してください。'))})}
 function hostMsg(id,m){if(m.type==='join'){if(players[id]){send(connections[id],{type:'roster',players});return}players[id]={id,name:(m.name||'Player '+id.slice(1)).slice(0,12),score:0};send(connections[id],{type:'welcome',id,roomCode,players});broadcast({type:'roster',players});render();status(`${players[id].name} が参加しました！ ${Object.keys(players).length}/4人`)}else if(m.type==='action'){action(id,m)}else if(m.type==='rematch'){showSelect();broadcast({type:'select',players})}else if(m.type==='backSelect'){showSelect();broadcast({type:'select',players})}else if(m.type==='leave'){remove(id)}}
 function guestMsg(m){if(m.type==='welcome'){myId=m.id;players=m.players;roomCode=m.roomCode;$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;render();showSelect();status('参加しました！ゲームを選べます。')}else if(m.type==='roster'){players=m.players;render()}else if(m.type==='start'){players=m.players;gameType=m.game;cardHand=m.hand||[];pokerHand=(m.hand||[]).slice(0,2);startLocal(m.data)}else if(m.type==='state'){players=m.players;currentRound=m.data;if(m.data&&m.data.card)gameType='card';if(m.data&&m.data.poker)gameType='poker';if(gameType==='card'){cardHand=m.hand||cardHand;}if(gameType==='poker'&&m.hand){pokerHand=m.hand.slice();}render();setup(m.data);$('pvpLog').textContent=m.log||''}else if(m.type==='cardPrivate'){cardHand=m.hand||[];if(gameType==='card')setup(currentRound)}else if(m.type==='pokerPrivate'){pokerHand=m.hand||[];if(gameType==='poker')setup(currentRound)}else if(m.type==='finish'){finishLocal(m.players,m.reason)}else if(m.type==='select'){players=m.players||players;showSelect()}else if(m.type==='hostLeave'){leave(true)}else if(m.type==='full'){status('このルームは満員です（最大4人）。')}}
@@ -3889,16 +3889,8 @@ function pokerFinishShowdown(log){
   if(pokerFinishTimer)clearTimeout(pokerFinishTimer);
   pokerFinishTimer=setTimeout(()=>{if(gameRunning&&gameType==='poker')finishGame('ポーカーの結果発表！');},4200);
 }
-function pokerAction(id,m){
-  if(!gameRunning||gameType!=='poker'||pokerState.phase==='finished'||!players[id])return;
-  if(m.action!=='check')return;
-  pokerState.done=pokerState.done||{};
-  if(pokerState.done[id])return;
-  pokerState.done[id]=true;
-  const allDone=arr().every(p=>pokerState.done[p.id]);
-  if(allDone)pokerAdvancePhase(false);
-  else {currentRound=pokerPublicData(false);broadcast({type:'state',players,data:currentRound,log:`${players[id].name} が確認しました。`});render();setup(currentRound);}
-}
+function pokerActivePlayers(){const seen=new Set();return arr().filter(p=>p&&p.id&&!seen.has(p.id)&&seen.add(p.id));}
+function pokerAction(id,m){if(!isHost)return;if(!gameRunning||gameType!=='poker'||pokerState.phase==='finished'||!players[id])return;if(m.action!=='check')return;if(m.phase&&m.phase!==pokerState.phase)return;pokerState.done=pokerState.done||{};if(pokerState.done[id])return;pokerState.done[id]=true;const active=pokerActivePlayers();const allDone=active.length>=2&&active.every(p=>pokerState.done[p.id]===true);if(allDone){pokerAdvancePhase(false);return}currentRound=pokerPublicData(false);const readyCount=active.filter(p=>pokerState.done[p.id]).length;const log=`${players[id].name} が確認しました。（${readyCount}/${active.length}人）`;broadcast({type:'state',players,data:currentRound,log});render();setup(currentRound);$('pvpLog').textContent=log;}
 function setupPokerGame(d){
   const box=$('pvpPlayBox');if(!d)return;
   const phase=d.phase||pokerState.phase||'preflop';
@@ -3943,10 +3935,7 @@ function setupPokerGame(d){
   }else html+='<div class="pokerHint">共通カードは最初はすべて裏向き → 3枚公開 → 残り2枚公開 → 最後に役の強さを比較します。</div>';
   html+='</div></div></div>';box.innerHTML=html;
 }
-function pvpPokerCheck(){
-  if(!gameRunning||gameType!=='poker')return;
-  if(isHost)action(myId,{type:'action',action:'check'});else send(connections.host,{type:'action',action:'check'});
-}
+function pvpPokerCheck(){if(!gameRunning||gameType!=='poker')return;const phase=pokerState.phase||currentRound?.phase||'preflop';const msg={type:'action',action:'check',phase};if(isHost)action(myId,msg);else send(connections.host,msg);}
 function pvpPokerToggle(i){return;}
 function pvpPokerDraw(){return;}
 

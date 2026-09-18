@@ -1377,7 +1377,14 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
   .pokerCard .pokerSuit{font-size:25px;}
 }
 </style>
-<style>.pokerConfirmBtn{display:inline-block!important;visibility:visible!important;opacity:1!important;min-height:48px;touch-action:manipulation;}</style></head>
+<style>.pokerConfirmBtn{display:inline-block!important;visibility:visible!important;opacity:1!important;min-height:48px;touch-action:manipulation;}</style>
+<style>
+.pokerActionChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px auto;max-width:760px}
+.pokerActionChoices .newActionBtn{min-height:82px;font-size:16px;cursor:pointer}
+.pokerActionChoices small{font-size:12px;color:#d7e4ef}
+@media(max-width:600px){.pokerActionChoices{grid-template-columns:1fr}}
+</style>
+</head>
 <body>
 <!-- 🎮 ホーム画面 -->
 <div id="homeScreen">
@@ -3748,12 +3755,12 @@ function loadPeer(done){if(window.Peer)return done();status('オンライン対�
 function send(c,m){try{if(c&&c.open)c.send(m)}catch(e){}}
 function broadcast(m){Object.values(connections).forEach(c=>send(c,m))}
 function arr(){return Object.values(players).sort((a,b)=>a.id.localeCompare(b.id))}
-function render(){const list=$('pvpMemberList'),grid=$('pvpPlayers');if(list)list.innerHTML=arr().map((p,i)=>`<div class="pvpMember">${i?'👤':'👑'} ${esc(p.name)} ${p.id===myId?'（あなた）':''}</div>`).join('');if($('pvpMemberCount'))$('pvpMemberCount').textContent=arr().length+'/4';if(grid)grid.innerHTML=arr().map(p=>`<div class="pvpPlayerCard"><strong>${esc(p.name)}</strong><div class="pvpScore">${p.score||0}<small> pt</small></div></div>`).join('')}
+function render(){const list=$('pvpMemberList'),grid=$('pvpPlayers');if(list)list.innerHTML=arr().map((p,i)=>`<div class="pvpMember">${i?'👤':'👑'} ${esc(p.name)} ${p.id===myId?'（あなた）':''}</div>`).join('');if($('pvpMemberCount'))$('pvpMemberCount').textContent=arr().length+'/4';if(grid)grid.innerHTML=arr().map(p=>`<div class="pvpPlayerCard"><strong>${esc(p.name)}</strong><div class="pvpScore">${gameType==='poker'?(Number(p.pokerPoints)||0):(p.score||0)}<small> pt</small></div></div>`).join('')}
 function showSelect(){if(timer)clearInterval(timer);gameRunning=false;$('pvpRoomPanel').style.display='block';$('pvpSelectArea').style.display='block';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';$('pvpSelectHint').textContent=isHost?'👑 ホストだけがゲームを選択できます。':'⏳ ホストがゲームを選択するのを待っています。';['pvpCardChooseBtn','pvpPokerChooseBtn'].forEach(id=>{const b=$(id);if(b){b.disabled=!isHost;b.style.opacity=isHost?'1':'.5';b.style.cursor=isHost?'pointer':'not-allowed';}});render();status(isHost?'ゲームを選択してください。':'ホストがゲームを選択するのを待っています。');}
-function create(){myName=(($('pvpHostName').value||'Player 1').trim()||'Player 1').slice(0,12);loadPeer(()=>{isHost=true;roomCode=code();myId='P1';players={P1:{id:'P1',name:myName,score:0}};peer=new Peer('PANICSHIFT-'+roomCode,{debug:0});status('ルーム作成中…');peer.on('open',()=>{$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;showSelect();status('ルーム作成完了！1〜4人でゲームを選べます。');});peer.on('connection',c=>{const used=new Set(Object.keys(players));let id=null;for(let n=2;n<=4;n++){if(!used.has('P'+n)){id='P'+n;break}}if(!id){send(c,{type:'full'});try{c.close()}catch(e){}return}connections[id]=c;let joined=false;c.on('open',()=>send(c,{type:'welcome',id,roomCode,players:JSON.parse(JSON.stringify(players))}));c.on('data',m=>{if(!m)return;if(m.type==='join'){if(joined)return;joined=true;hostMsg(id,m);return}if(!joined)return;hostMsg(id,m)});c.on('close',()=>{if(players[id])remove(id);else delete connections[id]});c.on('error',()=>{if(players[id])remove(id);else delete connections[id]});});peer.on('error',e=>status('接続エラー：'+(e.type||'再試行してください')));})}
+function create(){myName=(($('pvpHostName').value||'Player 1').trim()||'Player 1').slice(0,12);loadPeer(()=>{isHost=true;roomCode=code();myId='P1';players={P1:{id:'P1',name:myName,score:0,pokerPoints:0}};peer=new Peer('PANICSHIFT-'+roomCode,{debug:0});status('ルーム作成中…');peer.on('open',()=>{$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;showSelect();status('ルーム作成完了！1〜4人でゲームを選べます。');});peer.on('connection',c=>{const used=new Set(Object.keys(players));let id=null;for(let n=2;n<=4;n++){if(!used.has('P'+n)){id='P'+n;break}}if(!id){send(c,{type:'full'});try{c.close()}catch(e){}return}connections[id]=c;let joined=false;c.on('open',()=>send(c,{type:'welcome',id,roomCode,players:JSON.parse(JSON.stringify(players))}));c.on('data',m=>{if(!m)return;if(m.type==='join'){if(joined)return;joined=true;hostMsg(id,m);return}if(!joined)return;hostMsg(id,m)});c.on('close',()=>{if(players[id])remove(id);else delete connections[id]});c.on('error',()=>{if(players[id])remove(id);else delete connections[id]});});peer.on('error',e=>status('接続エラー：'+(e.type||'再試行してください')));})}
 function join(){myName=(($('pvpJoinName').value||'Player 2').trim()||'Player 2').slice(0,12);roomCode=($('pvpRoomInput').value||'').trim().toUpperCase();if(roomCode.length!==6){status('6文字のルームコードを入力してください。');return}loadPeer(()=>{isHost=false;peer=new Peer({debug:0});peer.on('open',()=>{const c=peer.connect('PANICSHIFT-'+roomCode,{reliable:true});connections.host=c;c.on('open',()=>send(c,{type:'join',name:myName}));c.on('data',guestMsg);c.on('close',()=>status('ホストとの接続が切れました。'))});peer.on('error',()=>status('接続エラー：ルームコードを確認してください。'))})}
-function hostMsg(id,m){if(m.type==='join'){if(players[id]){send(connections[id],{type:'roster',players});return}players[id]={id,name:(m.name||'Player '+id.slice(1)).slice(0,12),score:0};send(connections[id],{type:'welcome',id,roomCode,players});broadcast({type:'roster',players});render();status(`${players[id].name} が参加しました！ ${Object.keys(players).length}/4人`)}else if(m.type==='action'){action(id,m)}else if(m.type==='rematch'){showSelect();broadcast({type:'select',players})}else if(m.type==='backSelect'){showSelect();broadcast({type:'select',players})}else if(m.type==='leave'){remove(id)}}
-function guestMsg(m){if(m.type==='welcome'){myId=m.id;players=m.players;roomCode=m.roomCode;$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;render();showSelect();status('参加しました！ゲームを選べます。')}else if(m.type==='roster'){players=m.players;render()}else if(m.type==='start'){players=m.players;gameType=m.game;cardHand=m.hand||[];pokerHand=(m.hand||[]).slice(0,2);startLocal(m.data)}else if(m.type==='state'){players=m.players;currentRound=m.data;if(m.data&&m.data.card)gameType='card';if(m.data&&m.data.poker)gameType='poker';if(gameType==='card'){cardHand=m.hand||cardHand;}if(gameType==='poker'&&m.hand){pokerHand=m.hand.slice();}if(gameType==='poker'&&m.data&&m.data.phase!=='finished'){timeLeft=60; if($('pvpTime'))$('pvpTime').textContent='60'; pokerResetTimer(false);}render();setup(m.data);$('pvpLog').textContent=m.log||''}else if(m.type==='cardPrivate'){cardHand=m.hand||[];if(gameType==='card')setup(currentRound)}else if(m.type==='pokerPrivate'){pokerHand=m.hand||[];if(gameType==='poker')setup(currentRound)}else if(m.type==='finish'){finishLocal(m.players,m.reason)}else if(m.type==='select'){players=m.players||players;showSelect()}else if(m.type==='hostLeave'){leave(true)}else if(m.type==='full'){status('このルームは満員です（最大4人）。')}}
+function hostMsg(id,m){if(m.type==='join'){if(players[id]){send(connections[id],{type:'roster',players});return}players[id]={id,name:(m.name||'Player '+id.slice(1)).slice(0,12),score:0,pokerPoints:0};send(connections[id],{type:'welcome',id,roomCode,players});broadcast({type:'roster',players});render();status(`${players[id].name} が参加しました！ ${Object.keys(players).length}/4人`)}else if(m.type==='action'){action(id,m)}else if(m.type==='rematch'){showSelect();broadcast({type:'select',players})}else if(m.type==='backSelect'){showSelect();broadcast({type:'select',players})}else if(m.type==='leave'){remove(id)}}
+function guestMsg(m){if(m.type==='welcome'){myId=m.id;players=m.players;roomCode=m.roomCode;$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;render();showSelect();status('参加しました！ゲームを選べます。')}else if(m.type==='roster'){players=m.players;render()}else if(m.type==='start'){players=m.players;gameType=m.game;cardHand=m.hand||[];pokerHand=(m.hand||[]).slice(0,2);startLocal(m.data)}else if(m.type==='state'){players=m.players;currentRound=m.data;if(m.data&&m.data.card)gameType='card';if(m.data&&m.data.poker){gameType='poker';if(m.data.pokerPoints)Object.keys(m.data.pokerPoints).forEach(id=>{if(players[id])players[id].pokerPoints=Number(m.data.pokerPoints[id])||0;});}if(gameType==='card'){cardHand=m.hand||cardHand;}if(gameType==='poker'&&m.hand){pokerHand=m.hand.slice();}if(gameType==='poker'&&m.data&&m.data.phase!=='finished'){timeLeft=60; if($('pvpTime'))$('pvpTime').textContent='60'; pokerResetTimer(false);}render();setup(m.data);$('pvpLog').textContent=m.log||''}else if(m.type==='cardPrivate'){cardHand=m.hand||[];if(gameType==='card')setup(currentRound)}else if(m.type==='pokerPrivate'){pokerHand=m.hand||[];if(gameType==='poker')setup(currentRound)}else if(m.type==='finish'){finishLocal(m.players,m.reason)}else if(m.type==='select'){players=m.players||players;showSelect()}else if(m.type==='hostLeave'){leave(true)}else if(m.type==='full'){status('このルームは満員です（最大4人）。')}}
 function remove(id){if(players[id]){const n=players[id].name;delete players[id];delete connections[id];render();if(isHost)broadcast({type:'roster',players});status(`${n} が退出しました。残り ${Object.keys(players).length}/4人`)}}
 function choose(g){if(!isHost)return;if(!['card','poker'].includes(g)){status('このゲームは現在選択できません。');return}if(Object.keys(players).length<1){status('プレイヤーがいないため開始できません。');return}if(g==='poker'&&Object.keys(players).length<2){status('ポーカーは2人以上で開始してください。');return}gameType=g;Object.values(players).forEach(p=>p.score=0);if(g==='card'){initCardGame();return}if(g==='poker'){initPokerGame();return}const d=newRound(g);broadcast({type:'start',game:g,data:d,players});startLocal(d)}
 function newRound(g){roundIndex++;if(g==='rule'){const q=[['PANIC SHIFTで一番大事なのは？',['ルールを攻略する','運だけ','何もしない','画面を閉じる'],0],['3個以上つながると？',['消える','増える','止まる','保存される'],0],['4人対戦の最大人数は？',['4人','2人','8人','1人'],0],['市場で基本なのは？',['安く買って高く売る','高く買って安く売る','全部捨てる','何もしない'],0]][Math.floor(Math.random()*4)];return{round:roundIndex,q:q[0],options:q[1],answer:q[2]}}if(g==='color'){const c=[['赤','🔴'],['青','🔵'],['黄','🟡'],['緑','🟢'],['紫','🟣'],['水色','🩵']];return{round:roundIndex,target:(()=>{const x=c[Math.floor(Math.random()*c.length)];return x})(),options:c}}const n=Math.floor(Math.random()*9)+1,a=[n];while(a.length<4){const x=Math.floor(Math.random()*9)+1;if(!a.includes(x))a.push(x)}return{round:roundIndex,target:n,options:a.sort(()=>Math.random()-.5)}}
@@ -3770,17 +3777,23 @@ function pokerMakeDeck(){
   return deck.sort(()=>Math.random()-.5);
 }
 function pokerRankLabel(v){return ({14:'A',13:'K',12:'Q',11:'J',10:'10'})[v]||String(v);}
-function pokerCoinsGet(){
-  const n=Number(localStorage.getItem('panicshift_poker_coins'));
-  return Number.isFinite(n)&&n>=0?n:1000;
+function pokerPointsGet(){
+  const n=Number(localStorage.getItem('panicshift_poker_points'));
+  return Number.isFinite(n)?n:0;
 }
-function pokerCoinsSave(n){localStorage.setItem('panicshift_poker_coins',String(Math.max(0,Math.floor(n))));}
-function pokerCoinReward(results){
-  const me=results.findIndex(r=>r.id===myId);
-  if(me<0)return 0;
-  const reward=[100,60,30,10][me]||10;
-  pokerCoinsSave(pokerCoinsGet()+reward);
-  return reward;
+function pokerPointsSave(n){localStorage.setItem('panicshift_poker_points',String(Math.trunc(n)));}
+function pokerActionLabel(a){return ({normal:'👀 通常',challenge:'🔥 チャレンジ',safe:'🛡️ セーフ',allin:'⚡ オールインチャレンジ'})[a]||'未選択';}
+function pokerPayout(action,won){
+  if(action==='challenge')return won?200:50;
+  if(action==='safe')return won?120:-10;
+  if(action==='allin')return won?500:-300;
+  return won?100:-30;
+}
+function pokerApplyPoints(id,delta){
+  if(!players[id])return;
+  players[id].pokerPoints=Number(players[id].pokerPoints)||0;
+  players[id].pokerPoints+=delta;
+  if(id===myId)pokerPointsSave(players[id].pokerPoints);
 }
 function pokerCardHtml(c,selected=false,disabled=false){
   if(!c)return '';
@@ -3835,14 +3848,14 @@ function pokerScoreList(){
 function initPokerGame(){
   if(Object.keys(players).length<2){status('ポーカーは2人以上で開始してください。');return;}
   pokerDeck=pokerMakeDeck();
-  pokerState={hands:{},community:pokerDeck.splice(0,5),done:{},phase:'preflop',round:1};
+  pokerState={hands:{},community:pokerDeck.splice(0,5),done:{},actions:{},phase:'preflop',round:1};
   pokerHand=[];pokerSelected=[];pokerResults=[];pokerActionDone=false;
   if(pokerFinishTimer)clearTimeout(pokerFinishTimer);
   arr().forEach(p=>{pokerState.hands[p.id]=pokerDeck.splice(0,2);});
   pokerHand=pokerState.hands[myId]?.slice()||[];
   gameRunning=true;gameType='poker';timeLeft=60;
   $('pvpSelectArea').style.display='none';$('pvpArena').style.display='block';$('pvpEnd').style.display='none';
-  currentRound={poker:true,phase:'preflop',done:{},round:1,community:[]};
+  currentRound={poker:true,phase:'preflop',done:{},actions:{},round:1,community:[],timeLeft:60};
   render();setup(currentRound);
   broadcast({type:'start',game:'poker',data:currentRound,players,hand:pokerHand});
   arr().forEach(p=>{if(p.id!==myId)send(connections[p.id],{type:'pokerPrivate',hand:pokerState.hands[p.id]?.slice()||[]})});
@@ -3851,7 +3864,7 @@ function initPokerGame(){
 function pokerPublicData(reveal=false){
   const phase=pokerState.phase||'preflop';
   let count=phase==='preflop'?0:phase==='flop'?3:5;
-  const d={poker:true,phase,done:pokerState.done||{},round:pokerState.round||1,community:(pokerState.community||[]).slice(0,count)};
+  const d={poker:true,phase,done:pokerState.done||{},actions:pokerState.actions||{},round:pokerState.round||1,community:(pokerState.community||[]).slice(0,count),pokerPoints:Object.fromEntries(arr().map(p=>[p.id,Number(p.pokerPoints)||0]))};
   if(reveal)d.hands=pokerState.hands;
   return d;
 }
@@ -3879,11 +3892,12 @@ function sendPokerState(log,reveal=false){
     else send(connections[p.id],{type:'pokerPrivate',hand:pokerState.hands[p.id]?.slice()||[]});
   });
   render();setup(currentRound);$('pvpLog').textContent=log||'';
-  if(gameRunning&&gameType==='poker'&&isHost&&pokerState.phase!=='finished')pokerResetTimer();
+  if(gameRunning&&gameType==='poker'&&isHost&&(pokerState.phase==='preflop'||pokerState.phase==='flop'))pokerResetTimer();
 }
 function pokerAdvancePhase(force=false){
   if(!gameRunning||gameType!=='poker'||pokerState.phase==='finished')return;
   pokerState.done={};
+  pokerState.actions={};
   if(pokerState.phase==='preflop'){
     pokerState.phase='flop';
     sendPokerState(force?'時間切れなので3枚公開！':'全員の確認が完了！共通カード3枚を公開！');
@@ -3898,25 +3912,51 @@ function pokerFinishShowdown(log){
   if(!gameRunning||gameType!=='poker'||pokerState.phase==='finished')return;
   pokerState.phase='finished';
   pokerResults=pokerScoreList();
-  pokerResults.forEach((r,i)=>{if(players[r.id])players[r.id].score=Math.max(0,1000-i*100);});
-  const reward=pokerCoinReward(pokerResults);
-  sendPokerState((log||'ショーダウン！')+(reward?` 🪙 あなたはポーカーコイン +${reward}！`:''),true);
+  const winnerId=pokerResults[0]?.id;
+  const payoutLogs=[];
+  pokerResults.forEach(r=>{
+    const won=r.id===winnerId;
+    const action=pokerState.actions?.[r.id]||'normal';
+    const delta=pokerPayout(action,won);
+    pokerApplyPoints(r.id,delta);
+    payoutLogs.push(`${r.name} ${pokerActionLabel(action)} ${delta>=0?'+':''}${delta}pt`);
+  });
+  const myDelta=pokerResults.find(r=>r.id===myId)?pokerPayout(pokerState.actions?.[myId]||'normal',myId===winnerId):0;
+  sendPokerState((log||'ショーダウン！')+' '+payoutLogs.join(' / '),true);
   if(pokerFinishTimer)clearTimeout(pokerFinishTimer);
   pokerFinishTimer=setTimeout(()=>{if(gameRunning&&gameType==='poker')finishGame('ポーカーの結果発表！');},4200);
 }
 function pokerActivePlayers(){const seen=new Set();return arr().filter(p=>p&&p.id&&!seen.has(p.id)&&seen.add(p.id));}
-function pokerAction(id,m){if(!isHost)return;if(!gameRunning||gameType!=='poker'||pokerState.phase==='finished'||!players[id])return;if(m.action!=='check')return;if(m.phase&&m.phase!==pokerState.phase)return;pokerState.done=pokerState.done||{};if(pokerState.done[id])return;pokerState.done[id]=true;const active=pokerActivePlayers();const allDone=active.length>=2&&active.every(p=>pokerState.done[p.id]===true);if(allDone){pokerAdvancePhase(false);return}currentRound=pokerPublicData(false);const readyCount=active.filter(p=>pokerState.done[p.id]).length;const log=`${players[id].name} が確認しました。（${readyCount}/${active.length}人）`;broadcast({type:'state',players,data:currentRound,log});render();setup(currentRound);$('pvpLog').textContent=log;}
+function pokerAction(id,m){
+  if(!isHost)return;
+  if(!gameRunning||gameType!=='poker'||pokerState.phase==='finished'||!players[id])return;
+  if(!['normal','challenge','safe','allin'].includes(m.action))return;
+  if(m.phase&&m.phase!==pokerState.phase)return;
+  pokerState.done=pokerState.done||{};
+  pokerState.actions=pokerState.actions||{};
+  if(pokerState.done[id])return;
+  pokerState.done[id]=true;
+  pokerState.actions[id]=m.action;
+  const active=pokerActivePlayers();
+  const allDone=active.length>=2&&active.every(p=>pokerState.done[p.id]===true);
+  if(allDone){pokerAdvancePhase(false);return}
+  currentRound=pokerPublicData(false);
+  const readyCount=active.filter(p=>pokerState.done[p.id]).length;
+  const log=`${players[id].name} が ${pokerActionLabel(m.action)} を選択。（${readyCount}/${active.length}人）`;
+  broadcast({type:'state',players,data:currentRound,log});
+  render();setup(currentRound);$('pvpLog').textContent=log;
+}
 function setupPokerGame(d){
   const box=$('pvpPlayBox');if(!d)return;
   const phase=d.phase||pokerState.phase||'preflop';
   const reveal=!!d.hands||phase==='finished';
   const community=d.community||[];
   const hand=pokerHand.length?pokerHand:(d.hands?.[myId]||[]);
-  const phaseTitle=phase==='preflop'?'① 最初のアクション':phase==='flop'?'② 3枚公開後のアクション':'③ 残り2枚公開・ショーダウン';
-  const phaseText=phase==='preflop'?'あなたの2枚を確認したら「確認する」を押してください。':phase==='flop'?'共通カード3枚が公開されました。もう一度「確認する」を押してください。':'共通カード5枚がそろいました。役を比較します！';
+  const phaseTitle=phase==='preflop'?'① アクションタイム':phase==='flop'?'② 3枚公開後のアクションタイム':'③ ショーダウン';
+  const phaseText=phase==='preflop'?'2枚の手札を見て、4つのアクションから1つ選んでください。':phase==='flop'?'共通カード3枚を見て、もう一度アクションを選んでください。':'共通カード5枚がそろいました。最終アクションの結果でポイントを計算します！';
   let html='<div class="pokerGameBox"><div class="pokerTable">';
   html+=`<div class="pokerStatus">🂡 テキサスホールデム風ポーカー｜あなたの手札は2枚</div>`;
-  html+=`<div style="text-align:center;margin:10px 0;font-weight:1000">🪙 ポーカーコイン：${pokerCoinsGet()}枚 <span style="font-size:12px;color:#9fb4c9">（対戦順位で獲得・コインを賭ける機能はありません）</span></div>`;
+  html+=`<div style="text-align:center;margin:10px 0;font-weight:1000">🪙 ポーカーポイント：${Number(players[myId]?.pokerPoints)||0} pt</div>`;
   html+=`<div style="text-align:center;margin:12px 0"><div style="font-size:20px;font-weight:1000">${phaseTitle}</div><div style="color:#b8c9d6;margin-top:5px">${phaseText}</div></div>`;
   html+='<div style="text-align:center;margin:10px 0 14px"><div style="font-weight:1000;margin-bottom:7px">🌐 共通カード（5枚）</div><div class="pokerHand">';
   for(let i=0;i<5;i++)html+=community[i]?pokerCardHtml(community[i]):'<div class="pokerCard pokerHidden"><span>🂠</span></div>';
@@ -3925,7 +3965,10 @@ function setupPokerGame(d){
   arr().filter(p=>p.id!==myId).forEach(p=>{
     const h=reveal?(d.hands?.[p.id]||[]):null;
     const checked=!!d.done?.[p.id];
-    html+=`<div class="pokerPlayer"><div class="pokerPlayerName">👤 ${esc(p.name)} ${checked?'✅':''}</div>`;
+    const act=d.actions?.[p.id];
+    const pts=Number(d.pokerPoints?.[p.id] ?? p.pokerPoints ?? 0);
+    html+=`<div class="pokerPlayer"><div class="pokerPlayerName">👤 ${esc(p.name)} ${checked?'✅':''}</div><div style="font-size:13px;color:#ffd86b;margin:3px 0">🪙 ${pts} pt</div>`;
+    if(act)html+=`<div style="font-size:12px;color:#b8c9d6">選択：${esc(pokerActionLabel(act))}</div>`;
     if(h)html+=`<div class="pokerHand" style="margin:7px 0">${h.map(c=>pokerCardHtml(c)).join('')}</div><div class="pokerShowdown">${esc(pokerBestHand(h.concat(community)).name)}</div>`;
     else html+='<div class="pokerBacks">🂠 🂠</div>';
     html+='</div>';
@@ -3934,46 +3977,41 @@ function setupPokerGame(d){
   html+='<div class="pokerMyArea"><div style="text-align:center;font-weight:1000">🧑 あなたの手札（2枚）</div><div class="pokerHand">';
   hand.forEach(c=>{html+=pokerCardHtml(c);});
   html+='</div>';
-  if(phase!=='finished'){
+  if(phase==='preflop'||phase==='flop'){
     const already=!!d.done?.[myId];
-    if(phase==='preflop'||phase==='flop')html+=`<div style="text-align:center;margin:12px;position:relative;z-index:20"><button type="button" class="newActionBtn pokerConfirmBtn" ${already?'disabled':''} onclick="pvpPokerCheck(); return false;">${already?'✅ 確認済み':'▶ 確認する'}</button></div>`;
+    const currentAction=d.actions?.[myId];
+    if(already)html+=`<div style="text-align:center;margin:14px;font-weight:1000;color:#7fffd4">✅ ${esc(pokerActionLabel(currentAction))} を選択済み<br><small style="color:#b8c9d6">相手の選択を待っています…</small></div>`;
+    else html+=`<div class="pokerActionChoices"><button type="button" class="newActionBtn" onclick="pvpPokerAction('normal')">👀 通常<br><small>勝ち +100 / 負け -30</small></button><button type="button" class="newActionBtn" onclick="pvpPokerAction('challenge')">🔥 チャレンジ<br><small>勝ち +200 / 負け +50</small></button><button type="button" class="newActionBtn" onclick="pvpPokerAction('safe')">🛡️ セーフ<br><small>勝ち +120 / 負け -10</small></button><button type="button" class="newActionBtn" onclick="pvpPokerAction('allin')">⚡ オールインチャレンジ<br><small>勝ち +500 / 負け -300</small></button></div>`;
   }
   if(phase==='showdown'||reveal){
     const mine=pokerBestHand(hand.concat(community));
-    html+=`<div class="pokerShowdown" style="text-align:center;font-size:20px">あなたの役：${esc(mine.name)}</div>`;
+    const mineAction=d.actions?.[myId]||'normal';
+    html+=`<div class="pokerShowdown" style="text-align:center;font-size:20px">あなたの役：${esc(mine.name)}<br><span style="font-size:14px">最終アクション：${esc(pokerActionLabel(mineAction))}</span></div>`;
   }
   if(reveal){
     html+='<div class="pokerResultGrid">';
-    const resultSource=arr().map(p=>{const ph=d.hands?.[p.id]||[];const e=pokerBestHand(ph.concat(community));return{id:p.id,name:p.name,score:e.cat<0?0:e.score,handName:e.name};}).sort((a,b)=>b.score-a.score);
-    resultSource.forEach((r,i)=>{html+=`<div class="pokerResult ${r.id===myId?'me':''}"><span class="pokerRankBadge">${i+1}位</span><span class="pokerHandName">${esc(r.name)}<small style="display:block;color:#9fb4c9">${esc(r.handName||'')}</small></span><span class="pokerScoreSmall">${r.id===myId?'あなた':''}</span></div>`;});
-    html+='</div><div class="pokerHint">ポーカーコインは順位に応じて獲得されます。コインを賭ける機能はありません。</div>';
-  }else html+='<div class="pokerHint">共通カードは最初はすべて裏向き → 3枚公開 → 残り2枚公開 → 最後に役の強さを比較します。</div>';
+    const resultSource=arr().map(p=>{const ph=d.hands?.[p.id]||[];const e=pokerBestHand(ph.concat(community));return{id:p.id,name:p.name,score:e.cat<0?0:e.score,handName:e.name,action:d.actions?.[p.id]||'normal',points:Number(d.pokerPoints?.[p.id]??p.pokerPoints??0)};}).sort((a,b)=>b.score-a.score);
+    resultSource.forEach((r,i)=>{html+=`<div class="pokerResult ${r.id===myId?'me':''}"><span class="pokerRankBadge">${i+1}位</span><span class="pokerHandName">${esc(r.name)}<small style="display:block;color:#9fb4c9">${esc(r.handName||'')}｜${esc(pokerActionLabel(r.action))}</small></span><span class="pokerScoreSmall">🪙 ${r.points}pt</span></div>`;});
+    html+='</div><div class="pokerHint">ポイント計算は2回目のアクション（最終アクション）を使用します。チャレンジは勝てば成功、負ければ失敗です。</div>';
+  }else html+='<div class="pokerHint">①2枚 → アクション → ②3枚公開 → アクション → ③残り2枚 → 結果発表</div>';
   html+='</div></div></div>';box.innerHTML=html;
 }
-function pvpPokerCheck(){
+function pvpPokerAction(actionName){
   if(!gameRunning||gameType!=='poker')return false;
   const phase=(currentRound&&currentRound.phase)||pokerState.phase||'preflop';
-  if(phase==='finished')return false;
-  currentRound=currentRound||{};
-  currentRound.done=currentRound.done||{};
-  if(currentRound.done[myId])return false;
-
-  // 押した瞬間に自分の画面を「確認済み」にする
-  currentRound.done[myId]=true;
+  if(!['preflop','flop'].includes(phase))return false;
+  if(currentRound?.done?.[myId])return false;
+  currentRound=currentRound||{};currentRound.done=currentRound.done||{};currentRound.actions=currentRound.actions||{};
+  currentRound.done[myId]=true;currentRound.actions[myId]=actionName;
   setupPokerGame(currentRound);
-  $('pvpLog').textContent='あなたが確認しました。相手の確認を待っています…';
-
-  const msg={type:'action',action:'check',phase};
-  if(isHost){
-    pokerAction(myId,msg);
-  }else if(connections.host){
-    try{
-      if(connections.host.open)send(connections.host,msg);
-      else status('ホストとの接続を確認しています…');
-    }catch(e){status('ホストとの接続に失敗しました。');}
-  }
+  $('pvpLog').textContent=`あなたが ${pokerActionLabel(actionName)} を選択しました。相手の選択を待っています…`;
+  const msg={type:'action',action:actionName,phase};
+  if(isHost)pokerAction(myId,msg);
+  else if(connections.host&&connections.host.open)send(connections.host,msg);
+  else status('ホストとの接続を確認しています…');
   return false;
 }
+function pvpPokerCheck(){return pvpPokerAction('normal');}
 function pvpPokerToggle(i){return;}
 function pvpPokerDraw(){return;}
 
@@ -4019,12 +4057,12 @@ function pvpCardSkip(){if(!gameRunning||gameType!=='card'||currentRound.turn!==m
 function nextCardTurn(){cardTurnIndex=(cardTurnIndex+1)%cardTurnOrder.length;cardSelected=null;if(cardTurnIndex===0){cardRound++;if(isHost){if(cardRound>=10){finishGame('10周終了！結果発表！');return}if(cardEndRequested&&cardRound>=5){finishGame('終了ボタンが押されたため1周後に結果発表！');return}}}}
 function cardAction(id,m){if(!gameRunning||gameType!=='card'||currentRound.turn!==id||!cardState[id])return;const me=cardState[id];let log='';if(m.kind==='ownSwap'){if(m.handIndex==null||!me.hand[m.handIndex])return;const t=me.hand[m.handIndex];me.hand[m.handIndex]=me.field;me.field=t;log=`${players[id].name} が自分の公開カードを交換しました。`}else if(m.kind==='swap'){const target=cardState[m.targetId];if(!target||m.targetId===id||m.handIndex==null||!me.hand[m.handIndex])return;const t=me.hand[m.handIndex];me.hand[m.handIndex]=target.field;target.field=t;log=`${players[id].name} が公開カードを交換しました。`}else if(m.kind==='shuffle'){const all=[];Object.values(cardState).forEach(x=>all.push(...x.hand));all.sort(()=>Math.random()-.5);cardTurnOrder.forEach(pid=>cardState[pid].hand=all.splice(0,3));log=`🔀 ${players[id].name} が全員の手札をシャッフルしました！`}else if(m.kind==='rule'){const rules=['high','low','score'];cardRule=rules[Math.floor(Math.random()*rules.length)];log=`🎲 ${players[id].name} がルール変更！ ${cardRuleText(cardRule)}`}else if(m.kind==='requestEnd'){if(cardRound<4||cardEndRequested)return;cardEndRequested=true;log=`🏁 ${players[id].name} が終了を選択！5周目終了後に結果発表します。`}else if(m.kind==='skip'){log=`${players[id].name} はターンをスキップしました。`}else return;nextCardTurn();sendCardState(log);render();setup(currentRound);$('pvpLog').textContent=log}
 function cardScores(){return arr().map(p=>{const h=cardState[p.id]?.hand||[],nums=h.map(c=>c.n),types=h.map(c=>c.type),colors=h.map(c=>c.color),base=nums.reduce((a,b)=>a+b,0);const typeGroups=new Set(types.filter(x=>types.filter(y=>y===x).length>=2));const colorGroups=new Set(colors.filter(x=>colors.filter(y=>y===x).length>=2));const bonus=typeGroups.size+colorGroups.size;let score=base,detail=`数字合計 ${base}`;if(cardRule==='low'){score=-base;detail=`数字合計が低いほど勝利 (${base})`}else if(cardRule==='score'){score=base+bonus;detail=`数字合計 ${base} + 種類 ${typeGroups.size}点 + 色 ${colorGroups.size}点 = ${score}点`}return{id:p.id,name:p.name,score,detail}})}
-function finishGame(reason){if(!gameRunning)return;gameRunning=false;if(timer)clearInterval(timer);if(pokerFinishTimer)clearTimeout(pokerFinishTimer);if(gameType==='card'){cardScores().forEach(x=>{if(players[x.id])players[x.id].score=x.score});}else if(gameType==='poker'){pokerScoreList().forEach((x,i)=>{if(players[x.id])players[x.id].score=Math.max(0,1000-i*100);});}broadcast({type:'finish',players,reason});finishLocal(players,reason)}
+function finishGame(reason){if(!gameRunning)return;gameRunning=false;if(timer)clearInterval(timer);if(pokerFinishTimer)clearTimeout(pokerFinishTimer);if(gameType==='card'){cardScores().forEach(x=>{if(players[x.id])players[x.id].score=x.score});}else if(gameType==='poker'){pokerScoreList().forEach((x,i)=>{if(players[x.id])players[x.id].score=x.score;});}broadcast({type:'finish',players,reason});finishLocal(players,reason)}
 function finishLocal(ps,reason){gameRunning=false;if(timer)clearInterval(timer);players=ps||players;render();$('pvpArena').style.display='none';$('pvpEnd').style.display='block';const a=arr().sort((x,y)=>(y.score||0)-(x.score||0));const rank=a.findIndex(p=>p.id===myId)+1;$('pvpEndText').textContent=rank===1?'🏆 1位！':'🎮 対戦終了！';$('pvpEndDetail').textContent=reason+'　あなたは '+rank+'位';$('pvpFinalRanking').innerHTML=a.map((p,i)=>`<div class="pvpRank ${p.id===myId?'me':''}"><b>${i+1}位</b><span>${esc(p.name)}</span><strong>${p.score||0} pt</strong></div>`).join('');status('ルームは維持されています。再戦できます！')}
 function rematch(){if(isHost){showSelect();broadcast({type:'select'})}else{send(connections.host,{type:'rematch'});status('ホストが再戦を開始するのを待っています…')}}
 function backSelect(){if(isHost){showSelect();broadcast({type:'select'})}else send(connections.host,{type:'backSelect'})}
 function leave(silent){if(!silent){if(isHost)broadcast({type:'hostLeave'});else if(connections.host)send(connections.host,{type:'leave'})}if(timer)clearInterval(timer);if(pokerFinishTimer)clearTimeout(pokerFinishTimer);try{Object.values(connections).forEach(c=>c.close())}catch(e){}try{peer&&peer.destroy()}catch(e){}peer=null;connections={};players={};myId='';roomCode='';gameType='';currentRound=null;cardState={};cardHand=[];cardSelected=null;cardRound=0;cardEndRequested=false;pokerState={};pokerHand=[];pokerSelected=[];pokerDeck=[];pokerResults=[];pokerActionDone=false;$('pvpLobby').style.display='block';$('pvpRoomPanel').style.display='none';$('pvpSelectArea').style.display='none';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';status(silent?'ホストがルームを退出しました。':'オンライン対戦の準備OK！')}
-window.pvpCreateRoom=create;window.pvpJoinRoom=join;window.pvpChooseGame=choose;window.pvpAnswer=pvpAnswer;window.pvpRematch=rematch;window.pvpBackToSelect=backSelect;window.pvpLeaveRoom=leave;window.pvpCardSelect=pvpCardSelect;window.pvpCardOwnSwap=pvpCardOwnSwap;window.pvpCardSwapTarget=pvpCardSwapTarget;window.pvpCardShuffle=pvpCardShuffle;window.pvpCardRuleChange=pvpCardRuleChange;window.pvpCardSkip=pvpCardSkip;window.pvpCardRequestEnd=pvpCardRequestEnd;window.pvpPokerToggle=pvpPokerToggle;window.pvpPokerDraw=pvpPokerDraw;
+window.pvpCreateRoom=create;window.pvpJoinRoom=join;window.pvpChooseGame=choose;window.pvpAnswer=pvpAnswer;window.pvpRematch=rematch;window.pvpBackToSelect=backSelect;window.pvpLeaveRoom=leave;window.pvpCardSelect=pvpCardSelect;window.pvpCardOwnSwap=pvpCardOwnSwap;window.pvpCardSwapTarget=pvpCardSwapTarget;window.pvpCardShuffle=pvpCardShuffle;window.pvpCardRuleChange=pvpCardRuleChange;window.pvpCardSkip=pvpCardSkip;window.pvpCardRequestEnd=pvpCardRequestEnd;window.pvpPokerCheck=pvpPokerCheck;window.pvpPokerAction=pvpPokerAction;window.pvpPokerToggle=pvpPokerToggle;window.pvpPokerDraw=pvpPokerDraw;
 })();
 </script>
 <script>

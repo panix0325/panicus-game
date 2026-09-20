@@ -1737,6 +1737,53 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
   .app{zoom:.74!important;width:135.135135%!important}
 }
 </style>
+
+<style id="gacha-collection-scroll-mobile">
+/* 🎁 ガチャ内キャラクターコレクション：画面全体ではなくキャラ一覧だけスクロール */
+@media (max-width:600px){
+  #gachaGame{
+    overflow:hidden!important;
+  }
+  #gachaGame .gachaCollectionBox{
+    display:flex!important;
+    flex-direction:column!important;
+    height:calc(100vh - 150px)!important;
+    max-height:calc(100vh - 150px)!important;
+    overflow:hidden!important;
+  }
+  #gachaGame .gachaCollectionBox .characterGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    flex:1 1 auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    align-content:start!important;
+    padding:4px 3px 12px 0!important;
+    scrollbar-width:thin;
+  }
+  #gachaGame .gachaCollectionBox .characterCard{
+    min-width:0!important;
+    padding:6px!important;
+  }
+  #gachaGame .gachaCollectionBox .characterAvatar{
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:1/1!important;
+    flex-basis:auto!important;
+  }
+  #gachaGame .gachaCollectionBox .characterCard .characterRarity{font-size:12px!important}
+  #gachaGame .gachaCollectionBox .gachaCopyCount{font-size:10px!important}
+  #gachaGame .gachaCollectionBox .gachaCopyCount b{font-size:13px!important}
+  #gachaGame .gachaCollectionBox .evolutionProgress{font-size:9px!important}
+  #gachaGame .gachaCollectionBox .evolveGachaBtn{font-size:10px!important;padding:6px 4px!important}
+}
+@media (max-width:380px){
+  #gachaGame .gachaCollectionBox{height:calc(100vh - 135px)!important;max-height:calc(100vh - 135px)!important}
+}
+</style>
+
 </head>
 <body><div id="premiumCinematic" aria-hidden="true"><div class="premiumCinematicInner"><div class="premiumCinematicIcon" id="premiumCinematicIcon">💎</div><div class="premiumCinematicTitle" id="premiumCinematicTitle">PREMIUM UNLOCKED</div><div class="premiumCinematicSub" id="premiumCinematicSub">特別な演出が解放されました</div></div></div>
 <!-- 🎮 ホーム画面 -->
@@ -2211,7 +2258,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 <button class="evolutionBtn" disabled="" id="emperorCreateBtn" onclick="createEmperor()" type="button">🔒 5属性の★5をすべて集めると生成可能</button>
 <div class="evolutionInfo" id="emperorCreateStatus" style="text-align:center;margin-top:8px">必要な★5を確認中…</div>
 </div>
-<div class="gachaBox">
+<div class="gachaBox gachaCollectionBox">
 <h2>🎨 キャラクターコレクション</h2>
 <p class="battleHint">各キャラの所持数を確認して、同じキャラを3体集めたら好きなタイミングで進化できます！</p>
 <div class="characterGrid" id="characterCollection"></div>

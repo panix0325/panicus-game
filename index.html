@@ -4055,9 +4055,29 @@ function dungeonEnemyCounterAttack(){
   const target=party[Math.floor(Math.random()*party.length)]; dungeonInitCharacter(target,target._slot);
   const d=dungeonData.find(x=>x.id===dungeonProgress.active);
   const floor=Number(dungeonProgress.floor||1);
-  let baseDamage=d?.id==='monthly'?520:(d?.id==='emperor'?400:(d?.id==='dark'?55:20));
-  let damage=Math.max(1,baseDamage+Math.floor((floor-1)*(d?.id==='monthly'?145:d?.id==='emperor'?20:8)));
+  // ダンジョンの難易度に応じて敵の反撃力を大きく上げる。
+  // 以前は通常ダンジョンの多くが固定20ダメージだったため、後半でも敵が弱く感じやすかった。
+  let baseDamage;
+  if(d?.id==='monthly'){
+    baseDamage=520;
+  }else if(d?.id==='emperor'){
+    baseDamage=520;
+  }else if(d?.id==='dark'){
+    baseDamage=280;
+  }else if(Number(d?.difficulty)>0){
+    const diff=Number(d.difficulty);
+    baseDamage=260 + diff*115;
+  }else{
+    baseDamage=240;
+  }
+  let floorGrowth;
+  if(d?.id==='monthly') floorGrowth=145;
+  else if(d?.id==='emperor') floorGrowth=55;
+  else if(Number(d?.difficulty)>0) floorGrowth=55 + Number(d.difficulty)*22;
+  else floorGrowth=35;
+  let damage=Math.round(baseDamage + (floor-1)*floorGrowth + Math.pow(Math.max(0,floor-1),1.35)*8);
   if(d?.id==='monthly'&&floor===5) damage+=850;
+  if(d?.id==='origin'&&floor>=20) damage=Math.round(damage*1.35);
   const st=dungeonCharacterBattle[target._key]; st.hp=Math.max(0,st.hp-damage);
   party.forEach(c=>{const x=dungeonCharacterBattle[c._key]; if(x&&x.hp>0)x.energy=Math.min(c.maxEnergy||6,(x.energy||0)+1);});
   const log=document.getElementById('dungeonLog'); if(log)log.innerHTML+=`<br>👾 敵の反撃！ ${dexCharacterName(target)}に <b>${damage}</b> ダメージ！<br>⚡ 生存キャラの必殺ゲージ +1`;

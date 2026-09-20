@@ -1717,73 +1717,6 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 <style id="public-profile-access">
 .publicProfileHomeCard{margin:18px auto 22px;max-width:980px;padding:18px 20px;border:1px solid rgba(120,220,255,.38);border-radius:20px;background:linear-gradient(135deg,rgba(20,80,130,.28),rgba(90,50,160,.22));box-shadow:0 0 24px rgba(80,180,255,.12);cursor:pointer;transition:.18s;outline:none}.publicProfileHomeCard:hover,.publicProfileHomeCard:focus{transform:translateY(-2px);border-color:rgba(120,240,255,.72);box-shadow:0 0 30px rgba(80,190,255,.22)}.publicProfileHomeTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.publicProfileHomeTitle{font-size:22px;font-weight:1000}.publicProfileHomeBadge{font-size:11px;font-weight:1000;letter-spacing:.12em;padding:6px 10px;border-radius:999px;background:rgba(80,210,255,.14);border:1px solid rgba(80,210,255,.38)}.publicProfileHomeSub{margin-top:7px;color:#cbd8ee;font-size:13px}
 </style>
-
-
-<style id="mobile-global-scale-v3">
-/* 📱 モバイル：ホーム画面はそのまま、各ゲーム画面だけ全体を縮小して表示領域を増やす */
-@media (max-width:600px){
-  html,body{overflow-x:hidden!important}
-  .app{
-    zoom:.78!important;
-    width:128.205128%!important;
-    max-width:none!important;
-  }
-  /* コレクション・図鑑・スロットなどの大型パネルも同じ縮尺で統一 */
-  #collectionGame,#slotGame,#dexGame,#gachaGame,#dungeonGame,#marketGame,#titlesGame,#puzzleGame,#pvpGame{
-    font-size:inherit;
-  }
-}
-@media (max-width:380px){
-  .app{zoom:.74!important;width:135.135135%!important}
-}
-</style>
-
-<style id="gacha-collection-scroll-mobile">
-/* 🎁 ガチャ内キャラクターコレクション：画面全体ではなくキャラ一覧だけスクロール */
-@media (max-width:600px){
-  #gachaGame{
-    overflow:hidden!important;
-  }
-  #gachaGame .gachaCollectionBox{
-    display:flex!important;
-    flex-direction:column!important;
-    height:calc(100vh - 150px)!important;
-    max-height:calc(100vh - 150px)!important;
-    overflow:hidden!important;
-  }
-  #gachaGame .gachaCollectionBox .characterGrid{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:8px!important;
-    flex:1 1 auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    align-content:start!important;
-    padding:4px 3px 12px 0!important;
-    scrollbar-width:thin;
-  }
-  #gachaGame .gachaCollectionBox .characterCard{
-    min-width:0!important;
-    padding:6px!important;
-  }
-  #gachaGame .gachaCollectionBox .characterAvatar{
-    width:100%!important;
-    height:auto!important;
-    aspect-ratio:1/1!important;
-    flex-basis:auto!important;
-  }
-  #gachaGame .gachaCollectionBox .characterCard .characterRarity{font-size:12px!important}
-  #gachaGame .gachaCollectionBox .gachaCopyCount{font-size:10px!important}
-  #gachaGame .gachaCollectionBox .gachaCopyCount b{font-size:13px!important}
-  #gachaGame .gachaCollectionBox .evolutionProgress{font-size:9px!important}
-  #gachaGame .gachaCollectionBox .evolveGachaBtn{font-size:10px!important;padding:6px 4px!important}
-}
-@media (max-width:380px){
-  #gachaGame .gachaCollectionBox{height:calc(100vh - 135px)!important;max-height:calc(100vh - 135px)!important}
-}
-</style>
-
 </head>
 <body><div id="premiumCinematic" aria-hidden="true"><div class="premiumCinematicInner"><div class="premiumCinematicIcon" id="premiumCinematicIcon">💎</div><div class="premiumCinematicTitle" id="premiumCinematicTitle">PREMIUM UNLOCKED</div><div class="premiumCinematicSub" id="premiumCinematicSub">特別な演出が解放されました</div></div></div>
 <!-- 🎮 ホーム画面 -->
@@ -2258,7 +2191,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 <button class="evolutionBtn" disabled="" id="emperorCreateBtn" onclick="createEmperor()" type="button">🔒 5属性の★5をすべて集めると生成可能</button>
 <div class="evolutionInfo" id="emperorCreateStatus" style="text-align:center;margin-top:8px">必要な★5を確認中…</div>
 </div>
-<div class="gachaBox gachaCollectionBox">
+<div class="gachaBox">
 <h2>🎨 キャラクターコレクション</h2>
 <p class="battleHint">各キャラの所持数を確認して、同じキャラを3体集めたら好きなタイミングで進化できます！</p>
 <div class="characterGrid" id="characterCollection"></div>
@@ -4389,7 +4322,7 @@ dungeonLoad();
 checkTitles();
 const _dAttack=document.getElementById("dungeonAttackBtn"); if(_dAttack)_dAttack.addEventListener("click",dungeonAttack);
 const _dNext=document.getElementById("dungeonNextBtn"); if(_dNext)_dNext.addEventListener("click",dungeonNextFloor);
-showHome();mobileNavActive('home');
+showHome();
                                                                                                                       </script>
 <style>
 .newBattleWrap{max-width:980px;margin:auto;padding:18px}.newBattleBox{background:linear-gradient(145deg,#101827,#0a111d);border:1px solid #28465e;border-radius:22px;padding:22px;box-shadow:0 0 35px rgba(0,220,255,.12)}
@@ -4415,13 +4348,23 @@ showHome();mobileNavActive('home');
   <button class="newGameBtn" id="pvpPokerChooseBtn" onclick="pvpChooseGame('poker')">このゲームで対戦</button>
 </div>
 
+<div class="newGameCard coopChooseCard">
+  <h3>🤝 協力ダンジョン</h3>
+  <p>2人で協力してダンジョン攻略！1人3体ずつ選び、6体の仲間でボスに挑みます。</p>
+  <button class="newGameBtn" id="pvpCoopChooseBtn" onclick="pvpChooseGame('coop')">協力ダンジョンを開始</button>
+</div>
+
 </div></div>
+<div class="newArena" id="pvpCoopArena" style="display:none">
+<div class="newGameCard" style="margin-bottom:12px"><h2>🤝 協力ダンジョン</h2><p>このルームの2人で協力して攻略します。各プレイヤーは3体まで選択できます。</p><div id="pvpCoopParty" class="pvpPlayersGrid"></div><div id="pvpCoopStatus" class="newStatus">3体のキャラクターを選択してください。</div><div id="pvpCoopCharacterSelect"></div></div>
+</div>
 <div class="newArena" id="pvpArena" style="display:none"><div class="pvpPlayersGrid" id="pvpPlayers"></div><div class="newTimer">残り <span id="pvpTime">45</span>秒</div><div class="pvpGameTitle" id="pvpGameTitle"></div><div class="newPlayBox" id="pvpPlayBox"></div><div class="resultText" id="pvpLog">対戦開始！</div></div>
 <div class="newEnd" id="pvpEnd" style="display:none"><h2 id="pvpEndText"></h2><p id="pvpEndDetail"></p><div class="pvpFinalRanking" id="pvpFinalRanking"></div><button class="newActionBtn" onclick="pvpRematch()">🔄 同じルームで再戦</button><button class="newActionBtn" onclick="pvpBackToSelect()">🎮 ゲーム選択へ</button><button class="newActionBtn" onclick="pvpLeaveRoom()">🚪 ルームを退出</button></div>
 </div>
 <script>
 (function(){
 let peer=null,isHost=false,myId='',myName='',roomCode='',gameType='',gameRunning=false,timer=null,timeLeft=45,players={},connections={},currentRound=null,roundIndex=0;
+let coopParty=[];
   let cardState={},cardHand=[],cardSelected=null,cardTurnIndex=0,cardTurnOrder=[],cardRule='high',cardRound=0,cardEndRequested=false;  let pokerState={},pokerHand=[],pokerSelected=[],pokerDeck=[],pokerResults=[],pokerActionDone=false,pokerFinishTimer=null;
 const $=id=>document.getElementById(id), status=t=>{if($('pvpStatus'))$('pvpStatus').textContent=t};
 const esc=x=>String(x).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
@@ -4431,13 +4374,28 @@ function send(c,m){try{if(c&&c.open)c.send(m)}catch(e){}}
 function broadcast(m){Object.values(connections).forEach(c=>send(c,m))}
 function arr(){return Object.values(players).sort((a,b)=>a.id.localeCompare(b.id))}
 function render(){const list=$('pvpMemberList'),grid=$('pvpPlayers');if(list)list.innerHTML=arr().map((p,i)=>`<div class="pvpMember">${i?'👤':'👑'} ${esc(p.name)} ${p.id===myId?'（あなた）':''}</div>`).join('');if($('pvpMemberCount'))$('pvpMemberCount').textContent=arr().length+'/4';if(grid)grid.innerHTML=arr().map(p=>`<div class="pvpPlayerCard"><strong>${esc(p.name)}</strong><div class="pvpScore">${gameType==='poker'?(Number(p.pokerPoints)||0):(p.score||0)}<small> pt</small></div></div>`).join('')}
-function showSelect(){if(timer)clearInterval(timer);gameRunning=false;$('pvpRoomPanel').style.display='block';$('pvpSelectArea').style.display='block';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';$('pvpSelectHint').textContent=isHost?'👑 ホストだけがゲームを選択できます。':'⏳ ホストがゲームを選択するのを待っています。';['pvpCardChooseBtn','pvpPokerChooseBtn'].forEach(id=>{const b=$(id);if(b){b.disabled=!isHost;b.style.opacity=isHost?'1':'.5';b.style.cursor=isHost?'pointer':'not-allowed';}});render();status(isHost?'ゲームを選択してください。':'ホストがゲームを選択するのを待っています。');}
+function showSelect(){if(timer)clearInterval(timer);gameRunning=false;$('pvpRoomPanel').style.display='block';$('pvpSelectArea').style.display='block';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';$('pvpSelectHint').textContent=isHost?'👑 ホストだけがゲームを選択できます。':'⏳ ホストがゲームを選択するのを待っています。';['pvpCardChooseBtn','pvpPokerChooseBtn','pvpCoopChooseBtn'].forEach(id=>{const b=$(id);if(b){b.disabled=!isHost;b.style.opacity=isHost?'1':'.5';b.style.cursor=isHost?'pointer':'not-allowed';}});render();status(isHost?'ゲームを選択してください。':'ホストがゲームを選択するのを待っています。');}
 function create(){myName=(($('pvpHostName').value||'Player 1').trim()||'Player 1').slice(0,12);loadPeer(()=>{isHost=true;roomCode=code();myId='P1';players={P1:{id:'P1',name:myName,score:0,pokerPoints:0}};peer=new Peer('PANICSHIFT-'+roomCode,{debug:0});status('ルーム作成中…');peer.on('open',()=>{$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;showSelect();status('ルーム作成完了！1〜4人でゲームを選べます。');});peer.on('connection',c=>{const used=new Set(Object.keys(players));let id=null;for(let n=2;n<=4;n++){if(!used.has('P'+n)){id='P'+n;break}}if(!id){send(c,{type:'full'});try{c.close()}catch(e){}return}connections[id]=c;let joined=false;c.on('open',()=>send(c,{type:'welcome',id,roomCode,players:JSON.parse(JSON.stringify(players))}));c.on('data',m=>{if(!m)return;if(m.type==='join'){if(joined)return;joined=true;hostMsg(id,m);return}if(!joined)return;hostMsg(id,m)});c.on('close',()=>{if(players[id])remove(id);else delete connections[id]});c.on('error',()=>{if(players[id])remove(id);else delete connections[id]});});peer.on('error',e=>status('接続エラー：'+(e.type||'再試行してください')));})}
 function join(){myName=(($('pvpJoinName').value||'Player 2').trim()||'Player 2').slice(0,12);roomCode=($('pvpRoomInput').value||'').trim().toUpperCase();if(roomCode.length!==6){status('6文字のルームコードを入力してください。');return}loadPeer(()=>{isHost=false;peer=new Peer({debug:0});peer.on('open',()=>{const c=peer.connect('PANICSHIFT-'+roomCode,{reliable:true});connections.host=c;c.on('open',()=>send(c,{type:'join',name:myName}));c.on('data',guestMsg);c.on('close',()=>status('ホストとの接続が切れました。'))});peer.on('error',()=>status('接続エラー：ルームコードを確認してください。'))})}
+function startCoopLocal(){
+  if($('pvpSelectArea'))$('pvpSelectArea').style.display='none';
+  if($('pvpArena'))$('pvpArena').style.display='none';
+  if($('pvpEnd'))$('pvpEnd').style.display='none';
+  if($('pvpCoopArena'))$('pvpCoopArena').style.display='block';
+  renderCoopParty();
+  if($('pvpCoopStatus'))$('pvpCoopStatus').textContent=isHost?'3体選択後、協力ダンジョンを開始できます。':'3体選択してください。';
+}
+function renderCoopParty(){
+  const box=$('pvpCoopCharacterSelect'); if(!box)return;
+  const pool=(typeof characterMaster!=='undefined'?characterMaster:[]).filter(c=>typeof ownedCharacters==='undefined'||ownedCharacters.includes(c.id)).slice(0,60);
+  box.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">'+pool.map(c=>{const on=coopParty.includes(c.id);return `<button type="button" class="newActionBtn" style="min-height:58px;${on?'border-color:#ffd84d;box-shadow:0 0 12px rgba(255,216,77,.3)':''}" onclick="toggleCoopParty('${c.id}')">${typeof characterArt==='function'?characterArt(c,true):''}<br>★${c.rarity} ${c.name||c.id}${c.isMonthlyEX?' <b>EX</b>':''}</button>`}).join('')+'</div><div style="text-align:center;margin-top:10px;font-weight:900">選択中 ${coopParty.length} / 3</div>'+(coopParty.length===3&&isHost?'<button class="newGameBtn" style="margin-top:10px" onclick="beginCoopDungeon()">⚔️ 協力ダンジョンを開始</button>':'');
+}
+function toggleCoopParty(id){if(coopParty.includes(id))coopParty=coopParty.filter(x=>x!==id);else if(coopParty.length<3)coopParty.push(id);renderCoopParty();}
+function beginCoopDungeon(){if(coopParty.length!==3)return;gameRunning=true;if($('pvpCoopStatus'))$('pvpCoopStatus').textContent='🤝 協力ダンジョン開始！ 1人3体ずつで攻略します。';broadcast({type:'coopStart',players,hostParty:coopParty});renderCoopParty();}
 function hostMsg(id,m){if(m.type==='join'){if(players[id]){send(connections[id],{type:'roster',players});return}players[id]={id,name:(m.name||'Player '+id.slice(1)).slice(0,12),score:0,pokerPoints:0};send(connections[id],{type:'welcome',id,roomCode,players});broadcast({type:'roster',players});render();status(`${players[id].name} が参加しました！ ${Object.keys(players).length}/4人`)}else if(m.type==='action'){action(id,m)}else if(m.type==='rematch'){showSelect();broadcast({type:'select',players})}else if(m.type==='backSelect'){showSelect();broadcast({type:'select',players})}else if(m.type==='leave'){remove(id)}}
-function guestMsg(m){if(m.type==='welcome'){myId=m.id;players=m.players;roomCode=m.roomCode;$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;render();showSelect();status('参加しました！ゲームを選べます。')}else if(m.type==='roster'){players=m.players;render()}else if(m.type==='start'){players=m.players;gameType=m.game;cardHand=m.hand||[];pokerHand=(m.hand||[]).slice(0,2);startLocal(m.data)}else if(m.type==='state'){players=m.players;currentRound=m.data;if(m.data&&m.data.card)gameType='card';if(m.data&&m.data.poker){gameType='poker';if(m.data.pokerPoints)Object.keys(m.data.pokerPoints).forEach(id=>{if(players[id])players[id].pokerPoints=Number(m.data.pokerPoints[id])||0;});}if(gameType==='card'){cardHand=m.hand||cardHand;}if(gameType==='poker'&&m.hand){pokerHand=m.hand.slice();}if(gameType==='poker'&&m.data&&m.data.phase!=='finished'){timeLeft=60; if($('pvpTime'))$('pvpTime').textContent='60'; pokerResetTimer(false);}render();setup(m.data);$('pvpLog').textContent=m.log||''}else if(m.type==='cardPrivate'){cardHand=m.hand||[];if(gameType==='card')setup(currentRound)}else if(m.type==='pokerPrivate'){pokerHand=m.hand||[];if(gameType==='poker')setup(currentRound)}else if(m.type==='finish'){finishLocal(m.players,m.reason)}else if(m.type==='select'){players=m.players||players;showSelect()}else if(m.type==='hostLeave'){leave(true)}else if(m.type==='full'){status('このルームは満員です（最大4人）。')}}
+function guestMsg(m){if(m.type==='welcome'){myId=m.id;players=m.players;roomCode=m.roomCode;$('pvpLobby').style.display='none';$('pvpRoomPanel').style.display='block';$('pvpRoomCode').textContent='ROOM '+roomCode;render();showSelect();status('参加しました！ゲームを選べます。')}else if(m.type==='roster'){players=m.players;render()}else if(m.type==='start'){players=m.players;gameType=m.game;cardHand=m.hand||[];pokerHand=(m.hand||[]).slice(0,2);if(gameType==='coop'){startCoopLocal();}else startLocal(m.data)}else if(m.type==='state'){players=m.players;currentRound=m.data;if(m.data&&m.data.card)gameType='card';if(m.data&&m.data.poker){gameType='poker';if(m.data.pokerPoints)Object.keys(m.data.pokerPoints).forEach(id=>{if(players[id])players[id].pokerPoints=Number(m.data.pokerPoints[id])||0;});}if(gameType==='card'){cardHand=m.hand||cardHand;}if(gameType==='poker'&&m.hand){pokerHand=m.hand.slice();}if(gameType==='poker'&&m.data&&m.data.phase!=='finished'){timeLeft=60; if($('pvpTime'))$('pvpTime').textContent='60'; pokerResetTimer(false);}render();setup(m.data);$('pvpLog').textContent=m.log||''}else if(m.type==='cardPrivate'){cardHand=m.hand||[];if(gameType==='card')setup(currentRound)}else if(m.type==='pokerPrivate'){pokerHand=m.hand||[];if(gameType==='poker')setup(currentRound)}else if(m.type==='finish'){finishLocal(m.players,m.reason)}else if(m.type==='coopStart'){players=m.players||players;startCoopLocal();if($('pvpCoopStatus'))$('pvpCoopStatus').textContent='🤝 協力ダンジョン開始！ ホストが選んだ3体と、あなたの3体で攻略します。'}else if(m.type==='select'){players=m.players||players;showSelect()}else if(m.type==='hostLeave'){leave(true)}else if(m.type==='full'){status('このルームは満員です（最大4人）。')}}
 function remove(id){if(players[id]){const n=players[id].name;delete players[id];delete connections[id];render();if(isHost)broadcast({type:'roster',players});status(`${n} が退出しました。残り ${Object.keys(players).length}/4人`)}}
-function choose(g){if(!isHost)return;if(!['card','poker'].includes(g)){status('このゲームは現在選択できません。');return}if(Object.keys(players).length<1){status('プレイヤーがいないため開始できません。');return}if(g==='poker'&&Object.keys(players).length<2){status('ポーカーは2人以上で開始してください。');return}gameType=g;Object.values(players).forEach(p=>p.score=0);if(g==='card'){initCardGame();return}if(g==='poker'){initPokerGame();return}const d=newRound(g);broadcast({type:'start',game:g,data:d,players});startLocal(d)}
+function choose(g){if(!isHost)return;if(g==='coop'){if(Object.keys(players).length<2){status('協力ダンジョンは2人以上で開始してください。');return}gameType='coop';Object.values(players).forEach(p=>p.score=0);broadcast({type:'start',game:'coop',data:{coop:true},players});startCoopLocal();return}if(!['card','poker'].includes(g)){status('このゲームは現在選択できません。');return}if(Object.keys(players).length<1){status('プレイヤーがいないため開始できません。');return}if(g==='poker'&&Object.keys(players).length<2){status('ポーカーは2人以上で開始してください。');return}gameType=g;Object.values(players).forEach(p=>p.score=0);if(g==='card'){initCardGame();return}if(g==='poker'){initPokerGame();return}const d=newRound(g);broadcast({type:'start',game:g,data:d,players});startLocal(d)}
 function newRound(g){roundIndex++;if(g==='rule'){const q=[['PANIC SHIFTで一番大事なのは？',['ルールを攻略する','運だけ','何もしない','画面を閉じる'],0],['3個以上つながると？',['消える','増える','止まる','保存される'],0],['4人対戦の最大人数は？',['4人','2人','8人','1人'],0],['市場で基本なのは？',['安く買って高く売る','高く買って安く売る','全部捨てる','何もしない'],0]][Math.floor(Math.random()*4)];return{round:roundIndex,q:q[0],options:q[1],answer:q[2]}}if(g==='color'){const c=[['赤','🔴'],['青','🔵'],['黄','🟡'],['緑','🟢'],['紫','🟣'],['水色','🩵']];return{round:roundIndex,target:(()=>{const x=c[Math.floor(Math.random()*c.length)];return x})(),options:c}}const n=Math.floor(Math.random()*9)+1,a=[n];while(a.length<4){const x=Math.floor(Math.random()*9)+1;if(!a.includes(x))a.push(x)}return{round:roundIndex,target:n,options:a.sort(()=>Math.random()-.5)}}
 function startLocal(d){gameRunning=true;timeLeft=gameType==='poker'?60:45;$('pvpSelectArea').style.display='none';$('pvpArena').style.display='block';$('pvpEnd').style.display='none';currentRound=d;render();setup(d);if(timer)clearInterval(timer);timer=setInterval(()=>{timeLeft--;if($('pvpTime'))$('pvpTime').textContent=timeLeft;if(timeLeft<=0){clearInterval(timer);if(isHost&&gameType!=='poker')finishGame('時間切れ！')}},1000);$('pvpTime').textContent=timeLeft}
 function setup(d){const box=$('pvpPlayBox');$('pvpGameTitle').textContent=gameType==='rule'?'🧠 ルールハック':gameType==='color'?'🎨 カラークラッシュ':gameType==='number'?'💥 パニックナンバー':gameType==='poker'?'🂡 ポーカー':'🃏 手札チャレンジ';if(gameType==='card'){setupCardGame(d);return}if(gameType==='poker'){setupPokerGame(d);return}if(gameType==='rule')box.innerHTML=`<div class="pvpQuestion"><h2>${esc(d.q)}</h2><div class="pvpOptions">${d.options.map((x,i)=>`<button class="pvpOption" onclick="pvpAnswer(${i})">${esc(x)}</button>`).join('')}</div></div>`;else if(gameType==='color')box.innerHTML=`<div class="pvpQuestion"><h2>この色をタップ！</h2><div class="pvpTarget">${d.target[1]} ${esc(d.target[0])}</div><div class="pvpOptions">${d.options.map((x,i)=>`<button class="pvpColorBtn" onclick="pvpAnswer(${i})">${x[1]} ${esc(x[0])}</button>`).join('')}</div></div>`;else box.innerHTML=`<div class="pvpQuestion"><h2>「${d.target}」を探せ！</h2><div class="pvpOptions">${d.options.map((x,i)=>`<button class="pvpNumberBtn" onclick="pvpAnswer(${i})">${x}</button>`).join('')}</div></div>`}
@@ -4737,7 +4695,7 @@ function finishLocal(ps,reason){gameRunning=false;if(timer)clearInterval(timer);
 function rematch(){if(isHost){showSelect();broadcast({type:'select'})}else{send(connections.host,{type:'rematch'});status('ホストが再戦を開始するのを待っています…')}}
 function backSelect(){if(isHost){showSelect();broadcast({type:'select'})}else send(connections.host,{type:'backSelect'})}
 function leave(silent){if(!silent){if(isHost)broadcast({type:'hostLeave'});else if(connections.host)send(connections.host,{type:'leave'})}if(timer)clearInterval(timer);if(pokerFinishTimer)clearTimeout(pokerFinishTimer);try{Object.values(connections).forEach(c=>c.close())}catch(e){}try{peer&&peer.destroy()}catch(e){}peer=null;connections={};players={};myId='';roomCode='';gameType='';currentRound=null;cardState={};cardHand=[];cardSelected=null;cardRound=0;cardEndRequested=false;pokerState={};pokerHand=[];pokerSelected=[];pokerDeck=[];pokerResults=[];pokerActionDone=false;$('pvpLobby').style.display='block';$('pvpRoomPanel').style.display='none';$('pvpSelectArea').style.display='none';$('pvpArena').style.display='none';$('pvpEnd').style.display='none';status(silent?'ホストがルームを退出しました。':'オンライン対戦の準備OK！')}
-window.pvpCreateRoom=create;window.pvpJoinRoom=join;window.pvpChooseGame=choose;window.pvpAnswer=pvpAnswer;window.pvpRematch=rematch;window.pvpBackToSelect=backSelect;window.pvpLeaveRoom=leave;window.pvpCardSelect=pvpCardSelect;window.pvpCardOwnSwap=pvpCardOwnSwap;window.pvpCardSwapTarget=pvpCardSwapTarget;window.pvpCardShuffle=pvpCardShuffle;window.pvpCardRuleChange=pvpCardRuleChange;window.pvpCardSkip=pvpCardSkip;window.pvpCardRequestEnd=pvpCardRequestEnd;window.pvpPokerCheck=pvpPokerCheck;window.pvpPokerAction=pvpPokerAction;window.pvpPokerToggle=pvpPokerToggle;window.pvpPokerDraw=pvpPokerDraw;
+window.pvpCreateRoom=create;window.pvpJoinRoom=join;window.pvpChooseGame=choose;window.pvpAnswer=pvpAnswer;window.pvpRematch=rematch;window.pvpBackToSelect=backSelect;window.pvpLeaveRoom=leave;window.toggleCoopParty=toggleCoopParty;window.beginCoopDungeon=beginCoopDungeon;window.pvpCardSelect=pvpCardSelect;window.pvpCardOwnSwap=pvpCardOwnSwap;window.pvpCardSwapTarget=pvpCardSwapTarget;window.pvpCardShuffle=pvpCardShuffle;window.pvpCardRuleChange=pvpCardRuleChange;window.pvpCardSkip=pvpCardSkip;window.pvpCardRequestEnd=pvpCardRequestEnd;window.pvpPokerCheck=pvpPokerCheck;window.pvpPokerAction=pvpPokerAction;window.pvpPokerToggle=pvpPokerToggle;window.pvpPokerDraw=pvpPokerDraw;
 })();
 </script>
 <script>
@@ -5752,6 +5710,5 @@ body.illustrationThemeActive .characterRarity{
   else movePublicProfile();
 })();
 </script>
-
 </body>
 </html>

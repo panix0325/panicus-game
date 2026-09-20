@@ -807,7 +807,19 @@ body.illustrationThemeActive .navItem.active,body.illustrationThemeActive .tab.a
 .monthlyDungeonFeature .dungeonChoice:hover{transform:translateY(-2px);border-color:#e1b6ff;box-shadow:0 0 24px rgba(184,104,255,.28)}
 .monthlyDungeonFeature .dungeonChoiceName{color:#f0d9ff}
 .monthlyDungeonFeature .dungeonChoiceClear{color:#e5c7ff}
+</style><style id="coopDungeonSameAsNormal">
+/* 協力ダンジョンの選択画面を通常ダンジョンと同じUIに統一 */
+#pvpCoopArena{padding:0!important;background:transparent!important;}
+.coopDungeonBox{max-width:100%;margin:0 auto;padding:14px;}
+.coopPartyBox{margin-top:10px;}
+.coopDungeonRoster{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-height:360px;overflow:auto;padding:2px;}
+.coopRosterBtn{min-width:0;}
+.coopRosterBtn img,.coopRosterBtn .creatureImage,.coopRosterBtn svg{width:64px!important;height:64px!important;object-fit:contain;display:block;margin:auto;}
+#pvpCoopParty .partySlot img,#pvpCoopParty .partySlot .creatureImage,#pvpCoopParty .partySlot svg{width:52px!important;height:52px!important;object-fit:contain;}
+@media(max-width:900px){.coopDungeonRoster{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:520px){.coopDungeonBox{padding:10px}.coopDungeonRoster{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.coopRosterBtn{padding:6px}.coopRosterBtn img,.coopRosterBtn .creatureImage,.coopRosterBtn svg{width:56px!important;height:56px!important}.coopPartyBox .partySlots{grid-template-columns:repeat(3,1fr);gap:6px}.coopPartyBox .partySlot{min-height:76px;padding:4px}}
 </style>
+
 </style>
 <style id="ultra-rare-gacha">
 .gachaUltraRareNote{margin:8px 0 0;text-align:center;font-size:12px;color:#ffd84d;font-weight:800}
@@ -1717,7 +1729,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 <style id="public-profile-access">
 .publicProfileHomeCard{margin:18px auto 22px;max-width:980px;padding:18px 20px;border:1px solid rgba(120,220,255,.38);border-radius:20px;background:linear-gradient(135deg,rgba(20,80,130,.28),rgba(90,50,160,.22));box-shadow:0 0 24px rgba(80,180,255,.12);cursor:pointer;transition:.18s;outline:none}.publicProfileHomeCard:hover,.publicProfileHomeCard:focus{transform:translateY(-2px);border-color:rgba(120,240,255,.72);box-shadow:0 0 30px rgba(80,190,255,.22)}.publicProfileHomeTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.publicProfileHomeTitle{font-size:22px;font-weight:1000}.publicProfileHomeBadge{font-size:11px;font-weight:1000;letter-spacing:.12em;padding:6px 10px;border-radius:999px;background:rgba(80,210,255,.14);border:1px solid rgba(80,210,255,.38)}.publicProfileHomeSub{margin-top:7px;color:#cbd8ee;font-size:13px}
 </style>
-</head>
+<style id="coop-character-select-fix">#pvpCoopCharacterSelect{width:100%;overflow:visible}#pvpCoopCharacterSelect .coopCharGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}#pvpCoopCharacterSelect .coopCharCard{position:relative;width:100%;min-width:0;min-height:128px!important;padding:7px!important;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;overflow:hidden;touch-action:manipulation;-webkit-tap-highlight-color:transparent}#pvpCoopCharacterSelect .coopCharCard img{width:72px!important;height:72px!important;max-width:72px!important;max-height:72px!important;object-fit:contain!important;display:block!important;pointer-events:none!important;margin:0 auto!important}#pvpCoopCharacterSelect .coopCharName{font-size:11px;line-height:1.2;text-align:center;word-break:break-word;pointer-events:none}#pvpCoopCharacterSelect .coopCharMeta{font-size:10px;line-height:1.15;opacity:.9;pointer-events:none}#pvpCoopCharacterSelect .coopSelected{border-color:#ffd84d!important;box-shadow:0 0 12px rgba(255,216,77,.35)!important;transform:translateY(-1px)}@media(max-width:700px){#pvpCoopCharacterSelect .coopCharGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#pvpCoopCharacterSelect .coopCharCard{min-height:112px!important;padding:6px!important}#pvpCoopCharacterSelect .coopCharCard img{width:58px!important;height:58px!important;max-width:58px!important;max-height:58px!important}#pvpCoopCharacterSelect .coopCharName{font-size:10px}#pvpCoopCharacterSelect .coopCharMeta{font-size:9px}#pvpCoopCharacterSelect .newGameBtn{width:100%;min-height:44px;touch-action:manipulation}}@media(max-width:380px){#pvpCoopCharacterSelect .coopCharGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#pvpCoopCharacterSelect .coopCharCard img{width:54px!important;height:54px!important;max-width:54px!important;max-height:54px!important}}</style></head>
 <body><div id="premiumCinematic" aria-hidden="true"><div class="premiumCinematicInner"><div class="premiumCinematicIcon" id="premiumCinematicIcon">💎</div><div class="premiumCinematicTitle" id="premiumCinematicTitle">PREMIUM UNLOCKED</div><div class="premiumCinematicSub" id="premiumCinematicSub">特別な演出が解放されました</div></div></div>
 <!-- 🎮 ホーム画面 -->
 <div id="homeScreen">
@@ -4356,7 +4368,19 @@ showHome();
 
 </div></div>
 <div class="newArena" id="pvpCoopArena" style="display:none">
-<div class="newGameCard" style="margin-bottom:12px"><h2>🤝 協力ダンジョン</h2><p>このルームの2人で協力して攻略します。各プレイヤーは3体まで選択できます。</p><div id="pvpCoopParty" class="pvpPlayersGrid"></div><div id="pvpCoopStatus" class="newStatus">3体のキャラクターを選択してください。</div><div id="pvpCoopCharacterSelect"></div></div>
+<div class="dungeonBox coopDungeonBox">
+  <div class="dungeonHeader"><h2>🤝 協力ダンジョン</h2><span class="powerBadge" id="coopPartyCount">0 / 3</span></div>
+  <div class="dungeonInfo">このルームの2人で協力して攻略します。普通のダンジョンと同じ形式でキャラクターを3体選択してください。</div>
+  <div class="partyBox coopPartyBox">
+    <div class="partyTitle"><span>👥 あなたのパーティー</span><span class="powerBadge" id="coopPartyCount2">0 / 3</span></div>
+    <div class="partySlots" id="pvpCoopParty"></div>
+    <div class="partyPower" id="coopPartyPower">⚡ パーティー戦力 0</div>
+  </div>
+  <div class="dungeonRosterTitle">🎮 キャラクター選択</div>
+  <div class="dungeonRosterHint">キャラクターをタップして3体まで選択できます。選択中のキャラをもう一度タップすると外せます。</div>
+  <div id="pvpCoopCharacterSelect" class="dungeonRoster coopDungeonRoster"></div>
+  <div id="pvpCoopStatus" class="newStatus">3体のキャラクターを選択してください。</div>
+</div>
 </div>
 <div class="newArena" id="pvpArena" style="display:none"><div class="pvpPlayersGrid" id="pvpPlayers"></div><div class="newTimer">残り <span id="pvpTime">45</span>秒</div><div class="pvpGameTitle" id="pvpGameTitle"></div><div class="newPlayBox" id="pvpPlayBox"></div><div class="resultText" id="pvpLog">対戦開始！</div></div>
 <div class="newEnd" id="pvpEnd" style="display:none"><h2 id="pvpEndText"></h2><p id="pvpEndDetail"></p><div class="pvpFinalRanking" id="pvpFinalRanking"></div><button class="newActionBtn" onclick="pvpRematch()">🔄 同じルームで再戦</button><button class="newActionBtn" onclick="pvpBackToSelect()">🎮 ゲーム選択へ</button><button class="newActionBtn" onclick="pvpLeaveRoom()">🚪 ルームを退出</button></div>
@@ -4387,8 +4411,38 @@ function startCoopLocal(){
 }
 function renderCoopParty(){
   const box=$('pvpCoopCharacterSelect'); if(!box)return;
-  const pool=(typeof characterMaster!=='undefined'?characterMaster:[]).filter(c=>typeof ownedCharacters==='undefined'||ownedCharacters.includes(c.id)).slice(0,60);
-  box.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">'+pool.map(c=>{const on=coopParty.includes(c.id);return `<button type="button" class="newActionBtn" style="min-height:58px;${on?'border-color:#ffd84d;box-shadow:0 0 12px rgba(255,216,77,.3)':''}" onclick="toggleCoopParty('${c.id}')">${typeof characterArt==='function'?characterArt(c,true):''}<br>★${c.rarity} ${c.name||c.id}${c.isMonthlyEX?' <b>EX</b>':''}</button>`}).join('')+'</div><div style="text-align:center;margin-top:10px;font-weight:900">選択中 ${coopParty.length} / 3</div>'+(coopParty.length===3&&isHost?'<button class="newGameBtn" style="margin-top:10px" onclick="beginCoopDungeon()">⚔️ 協力ダンジョンを開始</button>':'');
+  const slots=$('pvpCoopParty');
+  const all=(typeof characterMaster!=='undefined'?characterMaster:[]);
+  const ownedSet=new Set(Array.isArray(ownedCharacters)?ownedCharacters:[]);
+  const copies=(typeof characterCopies!=='undefined'?characterCopies:{});
+  const partySet=new Set(Array.isArray(partyCharacters)?partyCharacters:[]);
+  const pool=all.filter(c=>ownedSet.has(c.id)||Number(copies[c.id]||0)>0||partySet.has(c.id));
+  const safe=pool.slice(0,120);
+  if(slots){
+    slots.innerHTML='';
+    for(let i=0;i<3;i++){
+      const id=coopParty[i]; const c=id?all.find(x=>x.id===id):null;
+      const el=document.createElement('button'); el.type='button'; el.className='partySlot'+(c?' filled':'');
+      el.innerHTML=c?`${characterArt(c,true)}<div class="partySlotName">${esc(dexCharacterName(c))} ${getCharacterRarityLabel(c)}</div>`:'<div style="font-size:12px;color:#7189a0">＋ キャラクター</div>';
+      if(c) el.onclick=()=>toggleCoopParty(c.id);
+      slots.appendChild(el);
+    }
+  }
+  let total=0; coopParty.forEach(id=>{const c=all.find(x=>x.id===id); if(c&&typeof dungeonPower==='function') total+=dungeonPower(c);});
+  if($('coopPartyPower'))$('coopPartyPower').textContent=`⚡ パーティー戦力 ${total.toLocaleString()}`;
+  if($('coopPartyCount'))$('coopPartyCount').textContent=coopParty.length+' / 3';
+  if($('coopPartyCount2'))$('coopPartyCount2').textContent=coopParty.length+' / 3';
+  box.innerHTML='';
+  safe.forEach(c=>{
+    const used=coopParty.includes(c.id); const count=Number(copies[c.id]||0);
+    const btn=document.createElement('button'); btn.type='button'; btn.className='dungeonRosterBtn coopRosterBtn'+(used?' selected':'');
+    btn.innerHTML=`${characterArt(c,true)}<div class="dungeonRosterName">${esc(dexCharacterName(c))} ${getCharacterRarityLabel(c)}</div><div class="dungeonRosterMeta">所持 ${count||1}体　出撃 ${used?'1':'0'}体</div><div class="dungeonRosterMeta">${used?'タップで外す':coopParty.length<3?'タップで出撃':'3体選択済み'}</div>`;
+    btn.onclick=()=>toggleCoopParty(c.id); box.appendChild(btn);
+  });
+  if(!safe.length)box.innerHTML='<div class="newStatus">所持しているキャラクターがありません。先にキャラクターを解放してください。</div>';
+  if($('pvpCoopStatus'))$('pvpCoopStatus').textContent=isHost?(coopParty.length===3?'⚔️ 3体選択完了！協力ダンジョンを開始できます。':'3体のキャラクターを選択してください。'):'3体のキャラクターを選択してください。';
+  if(isHost && coopParty.length===3 && !$('coopStartButton')){const b=document.createElement('button');b.id='coopStartButton';b.type='button';b.className='newGameBtn';b.textContent='⚔️ 協力ダンジョンを開始';b.onclick=beginCoopDungeon;box.parentElement.appendChild(b)}
+  if(coopParty.length<3){const b=$('coopStartButton');if(b)b.remove()}
 }
 function toggleCoopParty(id){if(coopParty.includes(id))coopParty=coopParty.filter(x=>x!==id);else if(coopParty.length<3)coopParty.push(id);renderCoopParty();}
 function beginCoopDungeon(){if(coopParty.length!==3)return;gameRunning=true;if($('pvpCoopStatus'))$('pvpCoopStatus').textContent='🤝 協力ダンジョン開始！ 1人3体ずつで攻略します。';broadcast({type:'coopStart',players,hostParty:coopParty});renderCoopParty();}

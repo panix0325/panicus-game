@@ -1108,6 +1108,10 @@ html,body{min-height:100%;}
   }
 }
 </style>
+<style id="mobileDungeonAttackFix">
+#dungeonAttackBtn{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;pointer-events:auto!important;position:relative;z-index:40!important;cursor:pointer!important;}
+@media(max-width:650px){#dungeonBattleScreen #dungeonAttackBtn{display:block;width:100%;min-height:52px;padding:13px 12px;font-size:16px;position:relative;z-index:40;touch-action:manipulation!important;}}
+</style>
 <style id="modern-game-ui">
 /* ===== PANIC SHIFT / Modern Game UI ===== */
 :root{
@@ -2061,7 +2065,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 </div>
 <div class="dungeonLog" id="dungeonLog">ダンジョンを選択してください。</div>
 <button class="action dungeonAttackBtn" disabled="" id="dungeonStartBtn" onclick="startDungeonBattle()" type="button">🚀 バトル開始</button>
-<button class="action dungeonAttackBtn" disabled="" id="dungeonAttackBtn" style="display:none" type="button">⚔️ 攻撃して進む</button>
+<button class="action dungeonAttackBtn" disabled="" id="dungeonAttackBtn" onclick="dungeonAttack()" style="display:none;touch-action:manipulation;pointer-events:auto" type="button">⚔️ 攻撃して進む</button>
 <button class="action dungeonNextBtn" id="dungeonNextBtn" style="display:none" type="button">➡️ 次の階へ</button>
 </div>
 </div>
